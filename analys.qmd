@@ -1,0 +1,696 @@
+---
+title: "Leaders and Laggards - Data Analysis"
+format:
+  html:
+    toc: true
+    number-sections: true
+    lightbox: true       # make figures expandable on click
+    fig-align: center    # center all figures
+execute:
+  echo: false
+  warning: false
+  message: false
+  fig-width: 8          # global figure size (inches)
+  fig-height: 8
+  fig-dpi: 300
+freeze: auto
+editor: visual
+editor_options:
+  chunk_output_type: console
+---
+
+**Purpose** This Quarto document analyses how Sweden’s main industrial emitters engage with the Industry Leap and Climate Leap decarbonisation programmes.
+
+It:
+
+1.  Imports project, actor, emission, and ambition data from local files.
+
+2.  Cleans and harmonises datasets.
+
+3.  Examines emissions, engagement, and climate ambition (Analysis A).
+
+4.  Maps technological pathways × emission scopes into clusters (Analysis B).
+
+5.  Builds and analyses actor collaboration networks (Analysis C).
+
+6.  Produces figures, tables, and metrics for use in the associated manuscript and appendix.
+
+```{r}
+#| eval: false
+#| include: false
+renv::init()                      # creates renv/, renv.lock
+# install the packages you use (once), e.g.:
+install.packages(c(
+  "tidyverse","ggforce","ggrepel","igraph","tidygraph","ggthemes","forcats","ggraph","factoextra","gt","gtExtras", "webshot2"
+))
+renv::snapshot()    
+```
+
+# Libraries
+```{r}
+#| label: setup
+# Reproducible setup ------------------------------------------------------
+
+# 1) Activate renv (pin package versions)
+if (!requireNamespace("renv", quietly = TRUE)) {
+  install.packages("renv")           # only runs the very first time
+}
+if (file.exists("renv/activate.R")) {
+  source("renv/activate.R")          # uses versions from renv.lock
+}
+
+# 2) Load packages (quietly)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(ggforce)
+  library(ggrepel)
+  library(igraph)
+  library(tidygraph)
+  library(ggthemes)
+  library(forcats)
+  library(ggraph)
+  library(factoextra)
+  library(gt)
+  library(gtExtras)
+  library(webshot2)
+})
+```
+
+# Reading the data
+
+```{r}
+
+# 1. Official emission statistics (2022) from Naturvårdsverket (NV).
+
+emission_statistics <- read_csv("data_prepared/emission_statistics.csv")
+
+# 2. Main emitters’ climate ambitions.
+#    These are manually collected and categorised from secondary sources (e.g. company reports, SBTi database).
+main_emitters_ambitions <- read_csv("data_prepared/main_emitters_ambitions.csv")
+
+# 3. All projects (Industry Leap + Climate Leap) that involve at least one main emitter.
+#- Pathways categorised into: "Electricity and hydrogen, Biofuels and biomass, CCS, Recycling, Energy efficiency, BECCS, DAC, Other, CCU, WtE-CCS, Bio-CCU".
+#- Scopes categorised into: "Scope 1, Scope 2, Scope 3, Infrastructure, Others".
+emitters_project <- read_csv("data_prepared/emitters_project.csv")
+
+# 4. All collaborations involving main emitters.
+#    Each project participant and their financial engagement categorised as
+#    targeting: "Own emissions", "Others’ emissions", or "Negative emissions".
+collaborations <- read_csv("data_prepared/collaborations.csv")
+
+# 5. Actor categorisation for all participants in main emitter collaborations.
+#    Each actor classified as one of: "Main industrial emitter", "Industrial emitter", "Other firm", "Innovation partnership", "New entrant", "University or research institute", "Government or intermediary".
+actors <- read_csv("data_prepared/actors.csv")
+
+# 6. Appendix data. All main emitter projects
+a1_data <- read_csv("data_prepared/A1_main_emitter_projects.csv")
+
+```
+
+# Identify main emitters from emission statistics and their engagement from collaboration data
+
+In the next code chunk we first identify the 20 main emitters in Sweden by aggregating official emission statistics from Naturvårdsverket (2022). We then calculate their level of engagement in Industry and Climate Leap projects by aggregating collaboration data on public funding received. Finally, we merge the emissions and engagement data to establish the dataset used in Analysis A.
+
+```{r}
+#| label: main-emitters
+#| echo: true
+#| message: false
+#| warning: false
+#| 
+# Aggregate emissions by firm and select top 20
+main_emitters_emissions <- emission_statistics %>% 
+  group_by(name, industry) %>% 
+  summarise(ktco2 =round(sum(fossil_t_co2)/1e3)) %>% ungroup()%>%
+  slice_max(order_by= ktco2, n=20)
+
+# Calculate engagement (SEK / MSEK) from collaboration data
+engagement <- collaborations %>%
+  group_by(name) %>%
+  summarise(engagement_MSEK = round(sum(engagement)/1e6), engagement_SEK = sum(engagement)) %>%
+  arrange((desc(engagement_MSEK))) %>%
+  mutate(main_emitter = name %in% main_emitters_emissions$name)
+
+# Merge emissions and engagement, calculate funding intensity (SEK per tonne CO2)
+main_emitters <- main_emitters_emissions %>% 
+  left_join(engagement) %>%
+  mutate(SEK_per_ton = round(engagement_SEK/(1000*ktco2)))
+
+main_emitters %>%
+  select(-c(main_emitter, engagement_SEK)) %>%
+  gt(rownames_to_stub = T) %>%
+  # Clean column labels
+  cols_label(
+    name            = "Emitter",
+    industry        = "Industry",
+    ktco2           = "Emissions (ktCO₂)",
+    engagement_MSEK = "Engagement (MSEK)",
+    SEK_per_ton     = "SEK per ton CO₂"
+  ) %>%
+  # Format large numbers with separators
+  fmt_number(
+    columns = c(ktco2, engagement_MSEK, SEK_per_ton),
+    decimals = 0,
+    use_seps = TRUE
+  ) %>%
+  # Add a summary row with totals
+  grand_summary_rows(
+    fns = list(Total = ~sum(.)),
+    columns = c(ktco2, engagement_MSEK),
+    formatter = fmt_number,
+    decimals = 0,
+    use_seps = TRUE
+  ) %>%
+  tab_options(
+    table.font.size = "small",
+    data_row.padding = px(3)
+  )
+
+```
+
+# Analysis A: Ambition vs. engagement
+
+We link firms’ stated climate ambition (Low/Medium/High) to their cumulative public funding (MSEK) to examine whether higher ambition corresponds to greater engagement in public decarbonization programes. We then cluster firms by emissions and engagement to reveal distinct participation profiles.
+
+This analysis produces two figures that are used in the paper:
+
+1.  Figure 2. Public funding engagement of main emitters by climate ambition level
+
+2.  Figure 3: Clustering of main emitters
+
+## Public funding engagement of main emitters by climate ambition level (Figure 2 in paper)
+
+To compare main emitters’ stated climate ambitions with their actual engagement in public decarbonization programes, we link the ambition categories (Low, Medium, High) to the dataset of 20 main emitters and their cumulative public funding.
+
+The figure shows the distribution of funding (MSEK) across ambition levels. Ambitions are ordered from Low to High, while engagement is shown on a logarithmic scale to account for the skewed distribution of funding. Each boxplot displays the spread of funding within each ambition category, and points represent individual firms. Labels are added to highlight specific firm names.
+
+```{r}
+#| label: fig-ambition
+#| echo: true
+#| message: false
+#| warning: false
+#| fig-cap: "Engagement in public decarbonisation programmes (measured as total public funding in MSEK) across the 20 main emitters, grouped by stated climate ambition levels (Low = red, Medium = orange, High = green). Engagement values are displayed on a logarithmic scale to account for the skewed distribution of funding. Boxplots indicate the spread of funding within each ambition category, while individual points represent firms. Labels highlight the names of specific firms to illustrate variation within and between ambition groups."
+
+
+# Merge ambition categories with main emitters and their engagement
+ambitions <- main_emitters %>% 
+  left_join(main_emitters_ambitions)
+
+# Prepare plotting data: ensure ambition factor is ordered Low → Medium → High
+amb_box_data <- ambitions %>%
+  mutate(ambition = as.factor(ambition)) %>%
+  mutate(ambition = fct_relevel(ambition, c("Low", "Medium", "High")))
+
+
+# Plot boxplots of engagement (MSEK, log scale) by ambition level
+amb_box_data %>% 
+  ggplot(aes(ambition, engagement_SEK/1e6, 
+             color = ambition, 
+             label = name)) +
+  geom_boxplot(alpha = 0.6, show.legend = F,color = "grey") + 
+  geom_point(show.legend = F) + 
+  scale_y_log10(labels=scales::number_format(accuracy = 1))+
+  scale_color_manual(
+  name = "Ambition",
+  values = c("Low" = "#D95F02", "Medium" = "#E6AB02", "High" = "#1B9E77")
+)+
+  geom_label_repel(show.legend = F) + 
+  labs(x= "Ambition levels", y = "Engagement - MSEK")+
+  theme_minimal() + 
+  theme(plot.background = element_rect(colour = "white"),
+        text = element_text(size = 12))
+```
+
+```{r}
+#| echo: false
+# Save figure
+#ggsave(here::here("results/figures/2_fig_boxplot_ambition.png"), width = 8, height = 8, units = "in", dpi = 300)
+```
+
+## Clustering of main emitters
+
+Since ambition levels alone do not explain variation in firms’ actual engagement, we apply a clustering analysis to identify distinct patterns. We use k-means clustering on two variables: each firm’s total annual emissions (ktCO₂e) and cumulative public funding received (MSEK). Both variables are log-transformed to reduce skewness.
+
+The optimal number of clusters was determined using the silhouette and within-cluster sum of squares (WSS) methods, both pointing to three clusters. Figure 3 visualises the resulting groups (A1–A3), which represent different engagement–emissions profiles among the 20 main emitters.
+
+### Identifying appropriate number of clusters
+
+```{r}
+#| label: kmeans-selection
+#| echo: true
+#| message: false
+#| warning: false
+#| fig-cap: "Cluster selection diagnostics for k-means on log-ktCO₂e and log-MSEK."
+#| fig-subcap: ["Silhouette", "WSS"]
+#| layout-ncol: 2
+
+# Prepare clustering input: log-transform emissions and engagement
+cluster_input <- ambitions %>%
+  mutate(log_ktco2 = log(ktco2),
+         log_msek  = log(engagement_MSEK + 1)) %>%
+  select(starts_with("log")) %>%
+  scale()
+
+# Assess number of clusters (silhouette + WSS)
+fviz_nbclust(cluster_input, kmeans, method = "silhouette")
+fviz_nbclust(cluster_input, kmeans, method = "wss")
+
+# Apply k-means clustering with 3 centers (identified as optimal)
+set.seed(42)
+kmeans_result <- kmeans(cluster_input, centers = 3)
+
+# Add cluster assignments to dataset
+ambitions$cluster <- as.factor(kmeans_result$cluster)
+```
+
+### Plotting the Clusters (Figure 3 in paper)
+```{r}
+#| label: fig-clusters
+#| echo: true
+#| message: false
+#| warning: false
+#| fig-cap: "Clustering of main emitters (A1–A3) based on total emissions (log-ktCO₂e) and cumulative public funding received (log-MSEK). The k-means algorithm groups firms into three distinct profiles: A1 = low emissions and low engagement, A2 = low emissions and high engagement, A3 = high emissions with varied engagement."
+
+# Prepare data for plotting
+amb_plot_data <- ambitions %>%
+  select(name, ambition, cluster, msek = engagement_MSEK, ktco2)
+
+# Plot firms by emissions (x) and engagement (y), highlighting clusters A1–A3
+amb_plot_data %>%
+  mutate(msek = msek + 1) %>%
+  ggplot(aes(ktco2, msek, color = cluster, label = name)) +
+  geom_mark_rect(aes(fill = cluster, label = paste0("A", cluster))) +
+  geom_point() +
+  geom_label_repel(size = 4, show.legend = FALSE) +
+  scale_x_log10() +
+  scale_y_log10() +
+  scale_color_brewer(palette = "Dark2") +
+  scale_fill_brewer(palette = "Dark2") +
+  theme_minimal() +
+  theme(plot.background = element_rect(colour = "white"),
+        legend.position = "none",
+        text = element_text(size = 12)) +
+  labs(x = "Emissions (log-ktCO₂e)", y = "Engagement (log-MSEK)")
+
+```
+
+```{r}
+#| echo: false
+#ggsave(here::here("results/figures/3_emissions_ambition_cluster.png"), width = 8, height = 8, units = "in", dpi = 300)
+```
+
+# Analysis B: Solution pathways and emissions scopes of investments
+
+We map each main emitter’s public funding to solution pathways (e.g., Electricity & hydrogen, CCS, Recycling, Energy efficiency, BECCS, DAC, CCU, WtE‑CCS, Bio‑CCU, Biofuels & biomass, Other) and the emissions scopes they target (Scope 1–3, Infrastructure, Others). We then build a two‑mode network connecting emitters and pathway–scope combinations, with edge weights given by cumulative funding (SEK). The resulting layout and community detection (B1–B7) reveal how emitters concentrate funding across technological pathways and scopes.
+
+## Data preparation: pathway × scope funding per emitter
+
+```{r}
+#| label: figB-data
+#| echo: true
+#| message: false
+#| warning: false
+
+# Sum engagement per (project, emitter)
+emitters_project_engagement <- collaborations %>%
+  group_by(projectnr, name) %>%
+  summarise(sek = sum(engagement))
+
+# Unique (project, emitter, pathway, scope) combos + join fun
+scope_pathway <- emitters_project %>% 
+  select(projectnr, name, pathway = pathway, scope) %>% 
+  distinct() %>%
+  left_join(emitters_project_engagement) %>%
+  group_by(name, pathway, scope) %>%
+  summarise(sek = sum(sek)) %>%
+  filter(sek >0) #Remove pathways with no funding
+
+# Wide table (emitters × pathway: scope), zeros for missing
+sp_wide<- scope_pathway %>% 
+  pivot_wider(names_from = pathway:scope, values_from = sek, 
+              names_sep = ": ") %>%
+  mutate(across(where(is.numeric), ~replace_na(., 0))) %>%
+  ungroup()
+str(sp_wide)
+
+```
+
+## Emitter–pathway network (Figure 4 in paper)
+```{r}
+#| label: fig-scope-pathway-network
+#| echo: true
+#| message: false
+#| warning: false
+#| fig-width: 12
+#| fig-height: 8
+#| fig-cap: "Network of main emitters and pathway–scope investments. Nodes are emitters and pathway–scope categories; edges are weighted by cumulative funding (SEK). Node size indicates total funding; colours indicate community detection (B1–B7)."
+
+# Long table for network edges (emitters ↔ pathway:scope)
+sp_long<- sp_wide %>%
+  pivot_longer(-name, names_to = "Tech", values_to = "sek") %>%
+  filter(sek >0)
+
+# Totals for node sizing
+tot_sek <- sp_long %>% 
+  group_by(name) %>%
+  summarise(tot_sek = sum(sek))
+
+tot_sek_tech <- sp_long %>% 
+  group_by(Tech) %>%
+  summarise(tot_sek = sum(sek)) %>% 
+  rename(name = Tech)
+
+tot_data <- bind_rows(tot_sek, tot_sek_tech)
+
+# Build two-mode graph (emitters + pathway:scope nodes)
+set.seed(1223)
+g_sp<- as_tbl_graph(sp_long, directed = FALSE) %N>%
+  mutate(type = ifelse(name %in% sp_long$name, TRUE, FALSE)) %>% 
+  left_join(tot_data) %>%
+  mutate(degree = centrality_degree(),
+         cl = group_fast_greedy(weights = log(sek)))
+
+sp_nodes <- g_sp %N>% as_tibble()
+sp_edges <- g_sp %E>% as_tibble()
+
+pal <- RColorBrewer::brewer.pal(8, "Dark2")
+
+set.seed(132)
+g_sp %>% 
+  ggraph(layout = "nicely")+
+  geom_edge_link(aes(edge_width = log(sek)),
+                 edge_alpha = 0.4,
+                 color = "grey", show.legend = FALSE) + 
+  geom_node_point(aes(size = log(tot_sek), 
+                      color = as.factor(cl), 
+                      shape= type),
+                  fill = "white", alpha = 0.9, show.legend = T) +
+  geom_node_text(aes(label = str_wrap(name, 20)),
+                 repel = TRUE, size = 3.5)+
+  scale_edge_width(range = c(0.5, 3))+
+  scale_color_manual(values = pal, labels = paste0("B",1:7))+
+  scale_size(range = c(2,6))+
+  theme_graph() + 
+  labs(title = "")+
+  guides(color = guide_legend(title = "Cluster:", nrow = 1),
+         shape = "none",
+         alpha = "none",
+         size = "none", 
+         edge_width = "none", 
+         edge_alpha = "none")+
+theme(legend.position = 'bottom', 
+      text = element_text(size = 12), 
+      legend.margin = margin(t = -10, unit = "pt"))
+```
+
+```{r}
+#| echo: FALSE
+#ggsave(here::here("results/figures/4_scope_pathway.png"), width = 12, height = 8, dpi = 600)
+```
+
+# Analysis C: Collaborations and Engagement
+In the final step, we examine how main emitters are embedded in the wider network of actors participating in publicly funded decarbonisation projects. We construct a one-mode actor network in which nodes represent organisations (emitters and their collaborators), and edges capture co-participation in projects. This enables us to assess both the breadth of collaborative ties and the centrality of emitters in the network.
+
+The first figure visualises the resulting actor network. Main emitters are highlighted and labelled, while other actors are coloured by type (e.g., industrial firms, universities, partnerships, intermediaries). Node size indicates degree centrality, and edge thickness reflects the number of shared projects. The network shows that while some emitters are highly central and well-connected, others remain more peripheral.
+
+We then calculate a set of network statistics (e.g., density, clustering, average path length) to summarise structural properties of the collaboration network. To contextualise these measures, we compare the observed network with a null model of randomly generated networks with the same number of nodes and edges. This baseline allows us to assess whether the observed network exhibits higher clustering or shorter paths than expected by chance.
+
+Finally, we cluster main emitters based on their collaborative embeddedness (degree centrality) and their level of public funding engagement (MSEK). The resulting groups (C1–C7), shown in the second figure, highlight distinct participation profiles ranging from “high collaboration and very high engagement” to “low collaboration and very low engagement.” These clusters illustrate how firms differ not only in the amount of funding they capture, but also in how embedded they are within collaborative structures.
+
+## One mode network (Figure 5 in paper)
+```{r}
+#| label: c-actor-network
+#| echo: true
+#| message: false
+#| warning: false
+#| fig-width: 14
+#| fig-height: 8
+#| fig-cap: "Actor network of funded projects that include at least one main emitter. Nodes are actors; edges connect co-participating actors, weighted by the number of shared projects. Colour indicates actor type; shape flags main emitters; node size reflects degree."
+
+# Input edges (project ↔ actor)
+df_g <- collaborations %>% 
+  select(projectnr, name, engagement) 
+
+# Create a bipartite graph (two-mode network) between projects and actor
+g_project <- as_tbl_graph(df_g, directed = FALSE) %>%
+  mutate(type = if_else(name %in% df_g$name, TRUE, FALSE)) # TRUE = actor, FALSE = project
+
+# Convert to onemode network
+firms_firm <- igraph::bipartite_projection(g_project)$proj2
+
+# Add engagement (SEK)
+add_engagement <- collaborations %>% 
+  group_by(name) %>% 
+  summarise(sek_tot = sum(engagement))
+
+# Create network and calculate key meassures
+gs <- as_tbl_graph(firms_firm) %N>%
+  mutate(main_emitter = if_else(name %in% main_emitters$name, TRUE, FALSE)) %>%
+  left_join(add_engagement) %>%
+  left_join(actors) %>%
+  filter(main_emitter | sek_tot >0) %>%
+  mutate(degree = centrality_degree(mode = "all"), 
+         betweenness = centrality_betweenness(),
+         authority = centrality_authority()
+         )
+ 
+nodes <- gs %N>% as_tibble() %>%  arrange(degree, betweenness, authority)
+edges <- gs %E>% as_tibble()
+
+#nn <- nodes %>% rowid_to_column("id") %>% select(id, name)
+#edges_named <- edges %>% left_join(nn, by = c("from" = "id")) %>% rename(source = name) %>% left_join(nn, by = c("to" = "id")) %>% rename(target = name) %>% select(source, target, weight)
+
+type_pal <- c("#000000", "#808080", "#E69F00", "#56B4E9", "#CC79A7", "#F0E442", "#0072B2")
+ind_n <- c("Main industrial emitter", "Industrial emitter", "Other firm", "Innovation partnership", "New entrant", "University or research institute", "Government or intermediary")
+names(type_pal)<-ind_n
+
+set.seed(111)
+ggraph(gs, layout = "fr") + 
+  geom_edge_link(aes(edge_alpha = 0.4, edge_width = weight), 
+                 color = "grey", show.legend = FALSE) + # Edge attributes
+  geom_node_point(aes(color = industry_actor_type, 
+                      size = degree, shape= main_emitter), fill = "white", alpha = 0.9, show.legend = T) + # Node attributes
+  geom_node_text(aes(label = if_else(main_emitter, 
+                                     str_wrap(name, 15),
+                                     str_trunc(name, 20, 
+                                               ellipsis = ".")),
+                     size = if_else(main_emitter, 4.5, 1.5),
+                     fontface = if_else(main_emitter, "bold", "plain")),
+                 repel = TRUE) + 
+  scale_edge_width(range = c(0.5, 2))+
+  scale_color_manual(values = type_pal)+
+  scale_size(range = c(2,6))+
+  theme_graph() +
+  guides(color = guide_legend(title = "Industry actor type:"),
+         shape = guide_legend(title = "Main emitter:"),
+         alpha = "none",
+         size = "none", 
+         edge_width = "none", 
+         edge_alpha = "none")+
+  theme(text = element_text(size = 12))
+
+```
+
+```{r}
+#| echo: FALSE
+#ggsave(here::here("results/figures/5_emitters_network.png"), width = 12, height = 8, dpi = 600)
+```
+
+## Calculate Network Characteristics
+
+```{r}
+#| label: c-network-stats
+#| echo: true
+#| message: false
+#| warning: false
+
+
+ig <- as.igraph(gs)
+
+# Core metrics on the observed graph
+network_stats <- list(
+  num_nodes = gorder(ig),
+  num_edges = gsize(ig),
+  density = round(edge_density(ig), 3),
+  diameter = diameter(ig, directed = FALSE, unconnected = TRUE),
+  avg_path_length = round(mean_distance(ig, directed = FALSE, unconnected = TRUE), 1),
+  transitivity_global = round(transitivity(ig, type = "global"), 2),
+  num_components = components(ig)$no,
+  largest_component_size = max(components(ig)$csize),
+  avg_degree = round(mean(degree(ig)), 1)
+)
+
+# Mapping of metric names to descriptive labels
+labels <- c(
+  num_nodes = "Number of nodes",
+  num_edges = "Number of edges",
+  density = "Density",
+  diameter = "Diameter (longest shortest path)",
+  avg_path_length = "Average path length",
+  transitivity_global = "Global clustering coefficient",
+  num_components = "Number of connected components",
+  largest_component_size = "Size of largest component",
+  avg_degree = "Average degree"
+)
+
+# Convert to tibble with labels
+network_stats_df <- enframe(network_stats, name = "Metric", value = "Value") %>% 
+  mutate(
+    Metric = labels[Metric])
+
+# Create a clean gt table
+tbl <- network_stats_df %>%
+  gt() %>%
+  cols_label(
+    Metric = "Network Measure",
+    Value = "Value"
+  ) %>%
+  fmt_number(columns = "Value", decimals = 3) %>%
+  gt_theme_espn()
+
+tbl
+```
+
+```{r}
+#| echo: FALSE
+
+#gtsave(tbl, filename = here::here("results/tables/extra_1_netchar_tbl.png"))
+```
+
+## Compare with random network
+
+```{r}
+#| label: c-random-baseline
+#| echo: true
+#| message: false
+#| warning: false
+
+set.seed(1234)
+# Use observed network size to parameterise the null model (G(n, m))
+num_nodes   <- gorder(ig)
+num_edges   <- gsize(ig)
+iterations  <- 1000
+
+# Initialize vectors to store results
+avg_path_length <- numeric(iterations)
+clustering_coeff <- numeric(iterations)
+
+# Run the simulation for 1000 iterations
+for(i in 1:iterations){
+  # Generate random network with fixed nodes and edges
+  g_random <- sample_gnm(n = num_nodes, m = num_edges, directed = FALSE, loops = FALSE)
+  
+  # Check if the network is connected; if not, take the largest component
+  if (!is.connected(g_random)) {
+    components <- clusters(g_random)
+    largest_component <- induced.subgraph(g_random, which(components$membership == which.max(components$csize)))
+  } else {
+    largest_component <- g_random
+  }
+  
+  # Compute metrics
+  avg_path_length[i] <- mean_distance(largest_component)
+  clustering_coeff[i] <- transitivity(largest_component, type = "global")
+}
+
+# Summarize results
+results <- tibble(
+  Metric = c("Average Path Length", "Clustering Coefficient"),
+  Mean = c(mean(avg_path_length), mean(clustering_coeff)),
+  SD = c(sd(avg_path_length), sd(clustering_coeff)),
+  Min = c(min(avg_path_length), min(clustering_coeff)),
+  Max = c(max(avg_path_length), max(clustering_coeff))
+)
+
+# Convert to gt table for display
+results_tbl <- results %>%
+  gt() %>%
+  cols_label(
+    Metric = "Metric",
+    Mean   = "Mean",
+    SD     = "SD",
+    Min    = "Min",
+    Max    = "Max"
+  ) %>%
+  fmt_number(columns = -Metric, decimals = 3) %>%
+  gt_theme_espn()
+
+results_tbl
+
+```
+
+## Clustering of main emitters based on their level of engagement and collaborations (degree)
+
+### Identifying appropriate number of clusters
+```{r}
+#| label: c-kmeans-selection
+#| echo: true
+#| message: false
+#| warning: false
+#| fig-cap: "Cluster selection diagnostics for k-means on log-ktCO₂e and log-MSEK."
+#| fig-subcap: ["Silhouette", "WSS"]
+#| layout-ncol: 2
+
+# Prepare emitter-level data: keep main emitters, degree, and total funding (SEK)
+mm_nodes <- nodes %>% 
+  filter(main_emitter) %>%
+  select(name, degree, sek_tot)
+
+# Build scaled input: degree and log(SEK)
+cluster_deg_nodes <- mm_nodes %>%
+  mutate(log_sek = log(sek_tot)) %>% 
+  select(degree, log_sek) %>%
+  scale()
+
+# Diagnostics (WSS and silhouette) to choose k
+factoextra::fviz_nbclust(cluster_deg_nodes, kmeans, method = "wss")
+factoextra::fviz_nbclust(cluster_deg_nodes, kmeans, method = "silhouette")
+
+# K-means with k = 7 (per diagnostics)
+deg_kl <- kmeans(cluster_deg_nodes, centers = 7)
+
+# Attach cluster labels and tidy for plotting
+emitter_nodes <- mm_nodes %>% 
+  mutate(msek = round(sek_tot/1e6, 1),
+    cluster = deg_kl$cluster) %>% 
+  select(name, cluster, degree, msek) %>% 
+  arrange(cluster)
+```
+
+## Plotting the Clusters (Figure 6 in paper)
+```{r}
+#| label: fig-embed-clusters
+#| echo: true
+#| message: false
+#| warning: false
+#| fig-cap: "Main emitters clustered into C1–C7 by collaborative embeddedness (degree) and public funding engagement (MSEK, log scale). Shaded hulls show clusters; points are firms; labels display firm names."
+
+emitter_nodes %>% 
+  mutate(cluster = as.factor(cluster)) %>%
+  ggplot(aes(degree, msek,
+             color = cluster,
+             label= name))+
+  geom_mark_rect(aes(fill = cluster, label = paste0("C", cluster)))+
+  geom_point()+
+  geom_label_repel(show.legend = F)+
+  scale_y_log10(labels = scales::number_format(accuracy = 1)) + 
+#  scale_color_colorblind(name = "Cluster")+
+  scale_color_brewer(palette = "Dark2")+
+  scale_fill_brewer(palette = "Dark2")+
+  theme_minimal()+
+  theme(plot.background = element_rect(colour = "white"))+
+  labs(x= "Degree", y = "Engagement (log-MSEK)")+
+  theme(legend.position = "none", 
+        text = element_text(size = 12))
+```
+
+```{r}
+#| echo: FALSE
+#ggsave(here::here("results/figures/6_degree_vs_engagement.png"), width = 8, height = 8, dpi = 300)  
+```
+
+
+# Appendix
+```{r}
+a1_data %>% gt() %>% gt_theme_espn()
+```
+

@@ -1,0 +1,235 @@
+name,industry,fossil_t_co2
+SSAB,Iron and steel,5003798
+Preem,Refinery,1970982
+Heidelberg Materials,Cement and minerals,1753629
+LKAB,Iron and steel,596859
+St1,Refinery,568991
+Borealis,Chemicals,527578
+Stockholm Exergi,Heat and power,470923
+E.ON,Heat and power,438550
+Boliden,Metals,301166
+Tekniska verken i Linköping,Heat and power,293850
+Sysav,Heat and power,282788
+SMA Mineral,Cement and minerals,269304
+Renova,Heat and power,223274
+Kubal,Metals,217897
+Vargön Alloys,Metals,196874
+Höganäs,Iron and steel,193266
+Nordkalk,Cement and minerals,189875
+Vattenfall,Heat and power,182327
+Outokumpu,Iron and steel,175895
+Uniper,Heat and power,175747
+Mälarenergi,Heat and power,161508
+Kalkproduktion Storugns,Cement and minerals,141455
+Ovako,Iron and steel,133690
+Nynas,Refinery,131919
+Perstorp,Chemicals,125636
+SCA,Pulp and paper,124418
+Nouryon,Chemicals,103275
+Nordic Sugar,Food,96880
+Stora Enso,Pulp and paper,93855
+Öresundskraft,Heat and power,92513
+Paroc,Cement and minerals,90706
+Sundsvall Energi,Heat and power,89506
+Halmstads Energi och Miljö,Heat and power,86567
+BillerudKorsnäs,Pulp and paper,85729
+Söderenergi,Heat and power,82348
+Norcarb Engineered Carbons,Chemicals,78690
+Sandvik,Iron and steel,77180
+Jönköping Energi,Heat and power,75810
+Göteborg Energi,Heat and power,74527
+INOVYN Sverige,Chemicals,71954
+Umeå Energi,Heat and power,68817
+Bodens Energi,Heat and power,63277
+Ardagh Glass,Cement and minerals,62810
+Husum Pulp,Pulp and paper,59688
+Uddevalla Kraft,Heat and power,57941
+Lidköping Energi,Heat and power,55693
+Saint Gobain Sweden,Cement and minerals,46947
+Övik Energi,Heat and power,46100
+Fiskeby Board,Pulp and paper,43780
+Värmevärden,Heat and power,42230
+Borås Energi och Miljö,Heat and power,41850
+Metsä,Pulp and paper,40765
+Borlänge Energi,Heat and power,40525
+Volvo,Other,35429
+Åmotfors Energi,Heat and power,33933
+Nordic carbide,Chemicals,32553
+Kemira Kemi,Chemicals,32316
+Södra skogsägarna,Pulp and paper,30483
+Uddeholms,Iron and steel,30276
+Nybro Värmecentral,Heat and power,29407
+Bollnäs Energi,Heat and power,29133
+Kiruna Kraft,Heat and power,29093
+Luleå Energi,Heat and power,29090
+Landskrona Energi Kraft,Heat and power,28625
+Befesa Scandust,Other,27987
+Ahlstrom-Munksjö,Pulp and paper,27980
+Skövde Energi,Heat and power,27708
+Ljungby Energi,Heat and power,26791
+Karlskoga Kraftvärmeverk,Heat and power,26117
+Hässleholm Miljö,Heat and power,24590
+Västerviks Miljö & Energi,Heat and power,24242
+Knauf Danogips,Other,23411
+Eksjö Energi,Heat and power,23147
+Arctic Paper,Pulp and paper,21447
+Karlstads Energi,Heat and power,21439
+Mondi Dynäs,Pulp and paper,17873
+Skellefteå Kraft,Heat and power,16633
+Orkla Foods,Food,16290
+Gelita Sweden,Chemicals,15120
+Adven,Heat and power,14957
+Iggesund Paperboard,Pulp and paper,13970
+RexCell Tissue & Airlaid,Pulp and paper,12976
+VafabMiljö Kommunalförbund,Heat and power,11369
+Holmen Paper,Pulp and paper,11270
+Finspångs Tekniska Verk,Heat and power,11139
+Smurfit Kappa,Pulp and paper,10252
+AarhusKarlshamn Sweden,Food,9831
+Nordic Paper,Pulp and paper,9648
+Sofidel Sweden,Pulp and paper,9139
+Björneborg Steel,Iron and steel,8768
+ABB,Pulp and paper,8615
+Fagersta Stainless,Iron and steel,8465
+Waggeryd Cell,Pulp and paper,8193
+Klippans Bruk,Pulp and paper,7095
+Härnösand Energi & Miljö,Heat and power,6361
+Yara,Chemicals,5511
+Gällivare Energi,Heat and power,5371
+Rottneros,Pulp and paper,5156
+Monier Roofing,Cement and minerals,5156
+The Absolut Company,Food,4393
+Fresenius Kabi,Chemicals,4003
+Vallviks Bruk,Pulp and paper,3826
+Eskilstuna Energi och Miljö,Heat and power,3540
+Svenska Kraftnät Gasturbiner,Heat and power,3457
+Domsjö Fabriker,Pulp and paper,2526
+Crane,Pulp and paper,2483
+Falu Energi & Vatten,Heat and power,2168
+Akzo Nobel,Chemicals,2153
+ENA Energi,Heat and power,2145
+Götene Vatten & Värme,Heat and power,2072
+Strängnäs Energi,Heat and power,2011
+Solör Bioenergi Fjärrvärme,Heat and power,1941
+Sandviken Energi,Heat and power,1899
+Volvo Cars,Other,1863
+Essity,Pulp and paper,1592
+Celanese Production,Chemicals,1493
+Höganäs Energi,Heat and power,1404
+Forsmarks Kraftgrupp,Heat and power,1397
+PiteEnergi,Heat and power,1332
+Haparanda Värmeverk,Heat and power,1287
+Sörred Energi,Heat and power,1265
+Ringhals,Heat and power,1146
+Alleima,Iron and steel,1135
+Linde,Heat and power,1091
+Härjeåns Energi,Heat and power,979
+Hagfors Energi,Heat and power,908
+Arvika Fjärrvärme,Heat and power,893
+Ronneby Miljö & Teknik,Heat and power,862
+Norrenergi,Heat and power,841
+Smedjebacken Energi & Vatten,Heat and power,834
+Bromölla Fjärrvärme,Heat and power,746
+IKEA,Other,644
+Olofströms Kraft,Heat and power,541
+Hedemora Energi,Heat and power,534
+OKG,Heat and power,532
+Vasa Värme,Heat and power,520
+Kristinehamns Värme,Heat and power,512
+Nässjö Affärsverk,Heat and power,505
+Höganäs Borgestad,Cement and minerals,434
+Fjärrvärme i Osby,Heat and power,421
+Katrinefors Kraftvärme,Heat and power,399
+Trelleborgs Fjärrvärme,Heat and power,350
+Kalmar Energi Värme,Heat and power,302
+Västra Mälardalens Energi & Miljö,Heat and power,266
+Setra Trävaror,Heat and power,263
+C4 Energi,Heat and power,254
+Moelven Valåsen,Heat and power,246
+Lessebo Paper,Pulp and paper,243
+Locum,Heat and power,235
+Njudung Energi,Heat and power,232
+Nevel,Heat and power,223
+Mjölby-Svartådalen Energi,Heat and power,222
+Ale Fjärrvärme,Heat and power,221
+Kils Energi,Heat and power,191
+Pinnacle Sweden,Heat and power,177
+Älvsbyns Energi,Heat and power,148
+InterXion Sverige,Heat and power,140
+Laxå Värme,Heat and power,140
+Amazon Data Services,Heat and power,139
+Swedish Hospital Partners,Heat and power,134
+Scandbio,Other,131
+Trollhättan Energi,Heat and power,123
+Veolia Sweden,Other,119
+GKN Aerospace Sweden,Other,109
+Söderhamn NÄRA,Heat and power,107
+Alvesta Energi,Heat and power,106
+Tidaholms Energi,Heat and power,104
+Bergkvist Insjön,Heat and power,103
+Tranås Energi,Heat and power,92
+Jokkmokks Värmeverk,Heat and power,91
+VGR,Heat and power,85
+Österlens Kraft,Heat and power,81
+Emmaboda Energi & Miljö,Heat and power,80
+Karlshamn Energi,Heat and power,78
+BI-QEM Resins,Chemicals,74
+Vimmerby Energi & Miljö,Heat and power,74
+Mark Kraftvärme,Heat and power,69
+Västerbergslagens Energi,Heat and power,59
+Jämtkraft,Heat and power,57
+Ljusdal Energi,Heat and power,56
+Stenungsund Energi & Miljö,Heat and power,50
+Värnamo Energi,Heat and power,43
+Hjo Energi,Heat and power,36
+Bomhus Energi,Heat and power,33
+Oskarshamn Energi,Heat and power,25
+Ulricehamn Energi,Heat and power,16
+Microsoft,Other,14
+Norrtälje Energi,Heat and power,14
+Falkenberg Energi,Heat and power,5
+Tierps Fjärrvärme,Heat and power,5
+Partille Energi,Heat and power,4
+Varaslättens lagerhus,Heat and power,4
+Kraton Chemical,Chemicals,3
+Skara Energi,Heat and power,3
+Vara Energi Värme,Heat and power,2
+Mölndal Energi,Heat and power,1
+Karl Hedins sågverk,Other,1
+Siljan Timber,Heat and power,1
+Sylvamo,Pulp and paper,0
+Växjö Energi,Heat and power,0
+Gävle Energi,Heat and power,0
+Lantmännen,Other,0
+Ystad Energi,Heat and power,0
+Munkfors Energi,Heat and power,0
+Fortum,Other,0
+Oatly,Food,0
+KLS Ugglarps,Food,0
+Ragn-Sells,Other,0
+Envigas,Other,0
+AR Packaging Flexibles,Other,0
+Björkdalsgruvan,Other,0
+Johnson Matthey Formox,Chemicals,0
+Bim Kemi,Pulp and paper,0
+Affärsverken Karlskrona,Heat and power,0
+Alingsås Energi Nät,Heat and power,0
+Biond Heat Production,Heat and power,0
+Degerfors Energi,Heat and power,0
+Falbygdens Energi,Heat and power,0
+Farmarenergi i Åtvidaberg,Heat and power,0
+Gislaved Energi,Heat and power,0
+Gotlands Energi,Heat and power,0
+Hammarö Energi,Heat and power,0
+Klubbgärdet Fastighets,Heat and power,0
+Kraftringen Energi,Heat and power,0
+Kungälv Energi,Heat and power,0
+Mariestads kommun,Heat and power,0
+Sala-Heby Energi,Heat and power,0
+Sandåsa Timber,Other,0
+Statkraft,Heat and power,0
+Swedavia Energi,Heat and power,0
+Telge Nät,Heat and power,0
+Varberg Energi,Heat and power,0
+Västvatten,Heat and power,0
+Univar Solutions,Chemicals,0

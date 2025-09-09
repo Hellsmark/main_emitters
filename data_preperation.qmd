@@ -1,0 +1,150 @@
+---
+title: "data_preperation"
+format: html
+editor: visual
+---
+
+# Libraries
+```{r}
+#| message: false
+#| warning: false
+library(dplyr)
+library(readr)
+library(googlesheets4)
+```
+
+
+# Reading Data
+```{r}
+#| message: false
+#| warning: false
+
+ss_cp <- "https://docs.google.com/spreadsheets/d/1DwEEOg1N_ZCtqywsScL7jDKUxkcO82J1W8iNFjpLD-s/edit?gid=2007334089#gid=2007334089"
+
+#projects_raw <- read_sheet(ss_cp, sheet = "projects")
+
+collaborations_raw <- read_sheet(ss_cp, sheet = "collaborations")
+all_projects_with_emitters <- read_sheet(ss_cp, sheet = "emitters_projects")
+actors_raw <- read_sheet(ss_cp, sheet = "actors")
+
+ss_old <- "https://docs.google.com/spreadsheets/d/11hiFLIq8IkyFTOJxCiZSByJ-_pPTaiSVGJfQXpIgH38/edit#gid=1862921149"
+nv_emitters <- read_sheet(ss_old, sheet = "emitters_2022") %>% janitor::clean_names()
+
+ambition_raw <- readxl::read_xlsx(here::here("data_original/emitters_ambition.xlsx")) %>% janitor::clean_names()
+
+#nv_all_projects <- readxl::read_xlsx("data/beviljade-ansokningar-klimatklivet-2024-12-31.xlsx") %>% janitor::clean_names()
+
+```
+
+# Data preparation for analysis
+```{r}
+
+#All projects funded by EM and NV - not needed for analysis
+#all_projects <- projects_raw %>% select(-c(orientation, Comment, Ref)) %>% rename(name = org)
+
+
+# 1. Official emission statistics (2022) from Naturvårdsverket (NV).
+#    Keep only organisation name, industrial sector, and reported fossil CO2 emissions.
+emission_statistics <- nv_emitters %>% 
+  select(name = org,                  # rename organisation column for consistency
+         industry = emission_sector_1,# broad industrial sector classification
+         fossil_t_co2)                # annual fossil CO2 emissions (tonnes)
+write_csv(emission_statistics, here::here("data_prepared/emission_statistics.csv"))
+
+# 2. Main emitters’ climate ambitions.
+#    These are manually collected and categorised from secondary sources 
+#    (e.g. company reports, SBTi database).
+main_emitters_ambitions <- ambition_raw
+write_csv(main_emitters_ambitions, here::here("data_prepared/main_emitters_ambitions.csv"))
+
+# 3. All projects (Industry Leap + Climate Leap) that involve at least one main emitter.
+#    - Drop unused orientation/motivation columns and duplicate pathway column.
+#    - Standardise naming of organisation and pathway.
+#    - Pathways categorised into: 
+#      "Electricity and hydrogen, Biofuels and biomass, CCS, Recycling, 
+#       Energy efficiency, BECCS, DAC, Other, CCU, WtE-CCS, Bio-CCU".
+#    - Scopes categorised into: 
+#      "Scope 1, Scope 2, Scope 3, Infrastructure, Others".
+emitters_project <- all_projects_with_emitters %>% 
+  select(-c(orientation, motivation, pathway)) %>% 
+  rename(name = org, pathway = pathway2)
+write_csv(emitters_project, here::here("data_prepared/emitters_project.csv"))
+
+# 4. All collaborations involving main emitters.
+#    Each project participant and their financial engagement categorised as
+#    targeting: "Own emissions", "Others’ emissions", or "Negative emissions".
+collaborations <- collaborations_raw %>% 
+  select(-c(comment, ref)) %>% 
+  rename(name = org)
+write_csv(collaborations, here::here("data_prepared/collaborations.csv"))
+
+# 5. Actor categorisation for all participants in main emitter collaborations.
+#    Each actor classified as one of:
+#    "Main industrial emitter", "Industrial emitter", "Other firm", 
+#    "Innovation partnership", "New entrant", "University or research institute", 
+#    "Government or intermediary".
+actors <- actors_raw %>% 
+  rename(name = org) %>% 
+  filter(!is.na(industry_actor_type))  #Actors that do not collaborate with main emitters have not been catagorized and are removed
+write_csv(actors, here::here("data_prepared/actors.csv"))
+
+```
+ 
+ 
+ 
+# Ellmer - only used once
+```{r}
+#| eval: false
+#| include: false
+library(ellmer)
+
+key <- Sys.getenv("OPENAI_API_KEY")
+sys_message <- "Your job is to translate project titles from Swedish to English. Keep the title as close to the original as possible, but make sure to that the translation is correct given the context. Only capitlise the first letter, abbreviations, names etc not every letter. Do not comment on your translations."
+
+chat <- chat_openai(system_prompt = sys_message, model = "gpt-4o-mini", api_args = list(temperature = 0))
+chat
+
+```
+
+
+# Print Table for Appendix
+```{r}
+#| eval: false
+#| include: false
+
+proj_tbl_raw<-emitters_project %>% 
+  filter(engagement >0) %>%
+  select(org, titel, pathway =pathway2, scope) %>%
+  arrange(org) %>%
+  rowid_to_column("P")
+
+
+emitters_project %>% 
+  filter(engagement >0) %>%
+  distinct() %>%
+  summarise(ssm = sum(engagement)/1e9) %>% pull(ssm)
+
+collaborations %>% filter(projectnr %in% emitters_project$projectnr) %>% 
+  distinct() %>% summarise(ssm = sum(engagement)/1e9)
+
+#transl <- tibble()
+#for (i in 1:nrow(proj_tbl_raw)) {
+#  print(i)
+#  to_eng <- proj_tbl_raw$titel[i]
+#  p <- proj_tbl_raw$P[i]
+#  chat <- chat_openai(system_prompt = sys_message, model = "gpt-4o-mini", api_args = list(temperature = 0))
+#  translated <- chat$chat(to_eng)
+#  temp <- tibble(title = translated)
+#  transl <- bind_rows(transl, temp)
+#  Sys.sleep(2)
+#}
+#
+proj_tbl <- proj_tbl_raw %>%
+  rename(titel_sv = titel) %>%
+  bind_cols(transl) %>%
+  select(P, "Organisation"= org, "Title" = title, Patway=pathway, Scope = scope)
+
+#write_csv(proj_tbl, here::here("data_prepared/A1_main_emitter_projects.csv"))
+
+```
+

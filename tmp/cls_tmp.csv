@@ -1,0 +1,21 @@
+name,Analysis_A,Analysis_B,Analysis_C
+SSAB,"3: High Emissions, Varied Engagement","2: Electricity and hydrogen: Scope 1, Energy efficiency: Others, Energy efficiency: Scope 2, Electricity and hydrogen: Scope 2","7: Medium-to-high collaboration, medium engagement"
+Preem,"3: High Emissions, Varied Engagement","3: CCS: Scope 1, Energy efficiency: Scope 1, CCS: Others",2: High collaboration and low engagement
+Heidelberg Materials,"3: High Emissions, Varied Engagement","3: CCS: Scope 1, Energy efficiency: Scope 1, CCS: Others",3: High collaboration and very high engagement
+LKAB,2: Relatively Low Emissions and High Engagement,"2: Electricity and hydrogen: Scope 1, Energy efficiency: Others, Energy efficiency: Scope 2, Electricity and hydrogen: Scope 2",3: High collaboration and very high engagement
+St1,2: Relatively Low Emissions and High Engagement,"1: Biofuels and biomass: Scope 1, Energy efficiency: Scope 3, Biofuels and biomass: Scope 2, Recycling: Others",1: High collaboration and high engagement
+Borealis,2: Relatively Low Emissions and High Engagement,7: Recycling: Scope 1,"5: Low collaboration, medium-to-high engagement"
+Stockholm Exergi,2: Relatively Low Emissions and High Engagement,"5: BECSS: Scope 1, Biofuels and biomass: Others, Recycling: Scope 3",1: High collaboration and high engagement
+E.ON,1: Lower Emissions and Lower Engagement,"5: BECSS: Scope 1, Biofuels and biomass: Others, Recycling: Scope 3",2: High collaboration and low engagement
+Boliden,2: Relatively Low Emissions and High Engagement,"2: Electricity and hydrogen: Scope 1, Energy efficiency: Others, Energy efficiency: Scope 2, Electricity and hydrogen: Scope 2",1: High collaboration and high engagement
+Tekniska verken i Linköping,2: Relatively Low Emissions and High Engagement,"6: WtE-CSS: Scope 1, Bio-CCU: Scope 3, Biofuels and biomass: Scope 3","5: Low collaboration, medium-to-high engagement"
+Sysav,1: Lower Emissions and Lower Engagement,"6: WtE-CSS: Scope 1, Bio-CCU: Scope 3, Biofuels and biomass: Scope 3",2: High collaboration and low engagement
+SMA Mineral,1: Lower Emissions and Lower Engagement,"3: CCS: Scope 1, Energy efficiency: Scope 1, CCS: Others",6: Low collaboration and very low engagement
+Renova,1: Lower Emissions and Lower Engagement,"4: CCS: Infrastructure, Electricity and hydrogen: Scope 3, CCU: Others, Electricity and hydrogen: Others",6: Low collaboration and very low engagement
+Kubal,2: Relatively Low Emissions and High Engagement,7: Recycling: Scope 1,"5: Low collaboration, medium-to-high engagement"
+Vargön Alloys,1: Lower Emissions and Lower Engagement,"1: Biofuels and biomass: Scope 1, Energy efficiency: Scope 3, Biofuels and biomass: Scope 2, Recycling: Others",2: High collaboration and low engagement
+Höganäs,1: Lower Emissions and Lower Engagement,"1: Biofuels and biomass: Scope 1, Energy efficiency: Scope 3, Biofuels and biomass: Scope 2, Recycling: Others","4: Very high collaboration, low engagement"
+Nordkalk,1: Lower Emissions and Lower Engagement,"3: CCS: Scope 1, Energy efficiency: Scope 1, CCS: Others","7: Medium-to-high collaboration, medium engagement"
+Vattenfall,2: Relatively Low Emissions and High Engagement,"4: CCS: Infrastructure, Electricity and hydrogen: Scope 3, CCU: Others, Electricity and hydrogen: Others",3: High collaboration and very high engagement
+Outokumpu,1: Lower Emissions and Lower Engagement,"1: Biofuels and biomass: Scope 1, Energy efficiency: Scope 3, Biofuels and biomass: Scope 2, Recycling: Others","7: Medium-to-high collaboration, medium engagement"
+Uniper,2: Relatively Low Emissions and High Engagement,"4: CCS: Infrastructure, Electricity and hydrogen: Scope 3, CCU: Others, Electricity and hydrogen: Others",1: High collaboration and high engagement

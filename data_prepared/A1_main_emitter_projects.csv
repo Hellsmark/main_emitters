@@ -1,0 +1,98 @@
+P,Organisation,Title,Pathway,Scope
+1,Boliden,Slag reduction with hydrogen,Electricity and hydrogen,Scope 1
+2,Boliden,Fossil-free underground mine,Electricity and hydrogen,Scope 1
+3,Boliden,Heat exchanger system mine ventilation Kankberg mine,Energy efficiency,Scope 2
+4,Boliden,Ecolink - Utilize waste heat for Skellefteå's district heating network,Energy efficiency,Others
+5,Borealis,Plastic recycling refinery in Stenungsund,Recycling,Scope 1
+6,Borealis,Plastic recycling refinery in Stenungsund,Recycling,Scope 1
+7,E.ON,Carbon Network South Sweden (CNetSS),CCS,Infrastructure
+8,E.ON,Carbon Network South Sweden (CNetSS) – phase 3,CCS,Infrastructure
+9,E.ON,Delivery of biogas to industrial customer in southern Skåne,Biofuels and biomass,Others
+10,E.ON,Large-scale production of biochar as a renewable raw material in the fossil-free value chain within the iron and steel industry,Biofuels and biomass,Others
+11,E.ON,Feasibility study for bio-CCS at Åby and Händelö combined heat and power plant,BECSS,Scope 1
+12,E.ON,bioCCS at the new combined heat and power plant in Malmö Energy Port,BECSS,Scope 1
+13,E.ON,Energy efficiency,Energy efficiency,Others
+14,Heidelberg Materials,CemZero - Heat transfer with plasma in rotary kilns,CCS,Scope 1
+15,Heidelberg Materials,CemZero – Carbon dioxide-free products with electrified manufacturing – reactivity of cement clinker with secondary additives,CCS,Scope 1
+16,Heidelberg Materials,CemZero-Fundamental properties of standalone plasma and plasma in combination with calcium-based bed materials in rotary kiln.,CCS,Scope 1
+17,Heidelberg Materials,Feasibility study CCS Slite – the foundation for the world's first climate-positive cement factory,CCS,Scope 1
+18,Heidelberg Materials,Feasibility study Slite CCS - on the way to the world's first climate-neutral cement factory,CCS,Scope 1
+19,Heidelberg Materials,Design preparations FEED Slite CCS – towards zero net emissions 2030,CCS,Scope 1
+20,Heidelberg Materials,Radiobased calcination determination in the production of cement and burnt lime,Energy efficiency,Scope 1
+21,Heidelberg Materials,Installation of silo capacity for the production of concrete with lower climate impact.,Energy efficiency,Scope 1
+22,Heidelberg Materials,Installation of silo capacity for the production of concrete with lower climate impact.,Energy efficiency,Scope 1
+23,Höganäs,Large-scale production of biochar as a renewable raw material in the fossil-free value chain within the iron and steel industry,Biofuels and biomass,Scope 1
+24,Höganäs,Pilot study with carbon dioxide neutral biochar in the Höganäs process,Biofuels and biomass,Scope 1
+25,Höganäs,Carbon Network South Sweden (CNetSS),CCS,Infrastructure
+26,Höganäs,Increased energy recovery for district heating,Energy efficiency,Others
+27,Kubal,Conversion of preheating of anodes before casting,Electricity and hydrogen,Scope 1
+28,Kubal,Co-location of primary production and remelting of aluminum products,Recycling,Scope 1
+29,LKAB,HYBRIT pilot project - Hydrogen storage in underground caverns with LRC technology,Electricity and hydrogen,Scope 1
+30,LKAB,HYBRIT (Hydrogen Breakthrough Ironmaking Technology) - research project,Electricity and hydrogen,Scope 1
+31,LKAB,HYBRIT pilot plant - feasibility study,Electricity and hydrogen,Scope 1
+32,LKAB,HYBRIT pilot fossil-free pellets,Electricity and hydrogen,Scope 1
+33,LKAB,"HYBRIT pilot fossil-free iron, steel, and hydrogen production",Electricity and hydrogen,Scope 1
+34,LKAB,"Testbed for integrated, efficient, and carbon-free mining system",Electricity and hydrogen,Scope 1
+35,LKAB,HYBRIT industrial demonstration project for hydrogen-based direct reduction,Electricity and hydrogen,Scope 1
+36,LKAB,Waste heat LKAB/TVAB,Energy efficiency,Others
+37,Nordkalk,Renovation and adaptation of equipment from fossil fuel to biofuel,Biofuels and biomass,Scope 1
+38,Nordkalk,Renewable energy carriers in the production of burnt lime,Biofuels and biomass,Scope 1
+39,Nordkalk,CemZero-Fundamental properties of standalone plasma and plasma in combination with calcium-based bed materials in rotary kiln.,CCS,Others
+40,Nordkalk,eliminate carbon capture pilot Köping,CCS,Scope 1
+41,Outokumpu,Energy conversion to biogas,Biofuels and biomass,Scope 1
+42,Outokumpu,"NEMO, climate-neutral molybdenum additive for steel",Energy efficiency,Scope 3
+43,Preem,CinfraCap – phase II - Infrastructure for transport and interim storage of captured carbon dioxide,CCS,Infrastructure
+44,Preem,Infrastructure for transport and intermediate storage of captured carbon dioxide – an efficient distribution chain,CCS,Infrastructure
+45,Preem,Preem CCS – Capture and storage of carbon dioxide,CCS,Scope 1
+46,Preem,Renewable hydrogen production – feasibility study towards a fossil-free refinery,Electricity and hydrogen,Scope 1
+47,Renova,Infrastructure for transport and intermediate storage of captured carbon dioxide – an efficient distribution chain,CCS,Infrastructure
+48,Renova,CinfraCap – phase II - Infrastructure for transport and interim storage of captured carbon dioxide,CCS,Infrastructure
+49,SMA Mineral,CemZero-Fundamental properties of standalone plasma and plasma in combination with calcium-based bed materials in rotary kiln.,CCS,Others
+50,SSAB,Large-scale production of biochar as a renewable raw material in the fossil-free value chain within the iron and steel industry,Biofuels and biomass,Scope 1
+51,SSAB,Pre-study – from fossil-free iron sponge to finished product,Electricity and hydrogen,Scope 1
+52,SSAB,From fossil-free iron sponge to finished product,Electricity and hydrogen,Scope 3
+53,SSAB,HYBRIT pilot project - hydrogen storage in underground caverns with LRC technology,Electricity and hydrogen,Scope 1
+54,SSAB,HYBRIT pilot plant - feasibility study,Electricity and hydrogen,Scope 1
+55,SSAB,Electrification demo of continuous annealing line,Electricity and hydrogen,Scope 2
+56,SSAB,HYBRIT (Hydrogen Breakthrough Ironmaking Technology) - research project,Electricity and hydrogen,Scope 1
+57,SSAB,"HYBRIT pilot fossil-free iron, steel, and hydrogen production",Electricity and hydrogen,Scope 1
+58,SSAB,Reduction of process-related gas emissions from the steel industry and production of valuable chemicals through gas fermentation,Energy efficiency,Scope 1
+59,St1,Ellinge upgrade facility,Biofuels and biomass,Scope 1
+60,St1,Borås UBG/LBG,Biofuels and biomass,Scope 2
+61,St1,Högbytorp Drying Facility,Biofuels and biomass,Scope 1
+62,St1,Infrastructure for transport and interim storage of captured carbon dioxide – an efficient distribution chain,CCS,Infrastructure
+63,St1,CinfraCap – phase II - Infrastructure for transport and interim storage of captured carbon dioxide,CCS,Infrastructure
+64,Stockholm Exergi,Development of chemical cyclical combustion for domestic fuels,BECSS,Scope 1
+65,Stockholm Exergi,Carbon dioxide capture with Svante technology,BECSS,Scope 1
+66,Stockholm Exergi,Further development of HPC at combined heat and power plants for the purpose of implementing BECCS,BECSS,Scope 1
+67,Stockholm Exergi,Extended testing of BECCS through HPC at combined heat and power plants,BECSS,Scope 1
+68,Stockholm Exergi,Testing of BECCS through HPC at combined heat and power plants,BECSS,Scope 1
+69,Stockholm Exergi,Chemical cyclical combustion of biomass and waste – pilot operation and feasibility study,Biofuels and biomass,Scope 1
+70,Stockholm Exergi,Sorting facility for residual waste,Recycling,Scope 3
+71,Sysav,Carbon Network South Sweden (CNetSS),CCS,Infrastructure
+72,Sysav,Carbon Network South Sweden (CNetSS) – phase 3,CCS,Infrastructure
+73,Sysav,Sysav - overall feasibility study waste CCS,WtE-CSS,Scope 1
+74,Sysav,Feasibility study for waste-CCS at Sysav,WtE-CSS,Scope 1
+75,Tekniska verken i Linköping,Feasibility study for CCS at Gärstadverket,WtE-CSS,Scope 1
+76,Tekniska verken i Linköping,Energy storage for reduced fossil fuel demand,Energy efficiency,Others
+77,Tekniska verken i Linköping,Liquefaction of carbon dioxide from biogas production,Bio-CCU,Scope 3
+78,Tekniska verken i Linköping,Increased gas production and reduced emissions,Biofuels and biomass,Scope 3
+79,Tekniska verken i Linköping,Gas tank manure pit Åby,Biofuels and biomass,Scope 3
+80,Tekniska verken i Linköping,Production facility for LBG in Linköping,Biofuels and biomass,Scope 3
+81,Tekniska verken i Linköping,Expanded production of LBG at Linköping's biogas plant,Biofuels and biomass,Scope 3
+82,Tekniska verken i Linköping,Develop the reuse at Linköping's recycling centers,Recycling,Scope 3
+83,Tekniska verken i Linköping,Gärstad sorting facility,Recycling,Scope 3
+84,Uniper,Carbon Network South Sweden (CNetSS) – phase 3,CCS,Infrastructure
+85,Uniper,Project AIR – CCU with hydrogen electrolysis for the production of sustainable methanol,CCU,Others
+86,Uniper,SkyFuelH2: FEED study,Electricity and hydrogen,Scope 3
+87,Vargön Alloys,Development of bio-briquettes for ferrochrome production in submerged arc furnace (Bio4SAF),Biofuels and biomass,Scope 1
+88,Vargön Alloys,Production demonstrator for large-scale polyester recycling facility,Recycling,Scope 3
+89,Vattenfall,The role of BioCCS for negative carbon dioxide emissions in Uppsala municipality,BECSS,Scope 1
+90,Vattenfall,Conversion of heating system from oil,Biofuels and biomass,Scope 1
+91,Vattenfall,"Carbon dioxide on trains – a technical system study for efficient, sustainable, and safe loading and unloading",CCS,Infrastructure
+92,Vattenfall,Renewable hydrogen production – feasibility study towards a fossil-free refinery,Electricity and hydrogen,Others
+93,Vattenfall,HYBRIT (Hydrogen Breakthrough Ironmaking Technology) - research project,Electricity and hydrogen,Others
+94,Vattenfall,HYBRIT pilot plant - feasibility study,Electricity and hydrogen,Others
+95,Vattenfall,"HYBRIT pilot fossil-free iron, steel, and hydrogen production",Electricity and hydrogen,Others
+96,Vattenfall,HYBRIT pilot project - Hydrogen storage in underground caverns with LRC technology,Electricity and hydrogen,Others
+97,Vattenfall,Production of synthetic sustainable aviation fuel on a commercial scale,Electricity and hydrogen,Scope 3
