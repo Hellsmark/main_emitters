@@ -2,10 +2,15 @@
 title: "Leaders and Laggards - Data Analysis"
 format:
   html:
+    theme: cosmo
     toc: true
     number-sections: true
-    lightbox: true       # make figures expandable on click
+    lightbox: true       # make figures expandable
     fig-align: center    # center all figures
+    code-fold: true      
+    code-summary: "Show code"
+    df-print: paged
+    embed-resources: true   # 
 execute:
   echo: false
   warning: false
@@ -16,24 +21,20 @@ execute:
 freeze: auto
 editor: visual
 editor_options:
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
-**Purpose** This Quarto document analyses how Sweden’s main industrial emitters engage with the Industry Leap and Climate Leap decarbonisation programmes.
+**Purpose**
 
-It:
+This document provides a reproducible analysis of how Sweden’s 20 largest industrial emitters engage with the mission to reach net-zero emissions by 2045. We integrate official emissions statistics, project-level funding data from Industry Leap and Climate Leap, and collaboration patterns derived from social network analysis to evaluate each firm’s ambition, technological pathway, targeted emission scope, engagement (public funding captured), and collaborations.
 
-1.  Imports project, actor, emission, and ambition data from local files.
+Two headline results emerge. First, stated ambition levels are a poor proxy for action: several firms with high-profile net-zero targets show limited programme participation, while a subset of medium-ambition incumbents are central, well-funded participants. Second, incumbents do not behave as simple “leaders” or “laggards.” Instead, we identify four strategic roles—transformative frontrunners, system enablers, adaptive followers, and peripheral bystanders—that better capture how incumbents mobilise resources and shape system change.
 
-2.  Cleans and harmonises datasets.
+By making the data, code, and figures transparent, the analysis aims to move policy and research debates beyond ambition statements toward observable engagement and collaboration, helping to design instruments that (i) reward concrete participation aligned with mission goals, (ii) foster shared infrastructures, and (iii) tailor support and pressure to heterogeneous incumbent roles.
 
-3.  Examines emissions, engagement, and climate ambition (Analysis A).
+**Structure of the analysis**
 
-4.  Maps technological pathways × emission scopes into clusters (Analysis B).
-
-5.  Builds and analyses actor collaboration networks (Analysis C).
-
-6.  Produces figures, tables, and metrics for use in the associated manuscript and appendix.
+This document is organised into six steps: 1. Data import — emissions, climate ambitions, project participation, collaborations, and actor categories. 2. Data preparation — cleaning and harmonising datasets for consistent identifiers and categories. 3. Analysis A: Ambition vs. Engagement — linking firms’ stated ambitions to emissions and public funding, and clustering participation profiles. 4. Analysis B: Pathways × Scopes — mapping technological solution pathways against targeted emission scopes and identifying investment communities. 5. Analysis C: Collaboration networks — constructing and analysing actor networks to assess the centrality and roles of main emitters. 6. Outputs — figures, tables, and metrics that reproduce results presented in the associated manuscript and appendix.
 
 ```{r}
 #| eval: false
@@ -47,6 +48,7 @@ renv::snapshot()
 ```
 
 # Libraries
+
 ```{r}
 #| label: setup
 # Reproducible setup ------------------------------------------------------
@@ -76,7 +78,11 @@ suppressPackageStartupMessages({
 })
 ```
 
-# Reading the data
+# Data sources
+
+The analysis draws on six prepared datasets: 1. Emission statistics (2022) from Naturvårdsverket (Swedish EPA). 2. Climate ambitions of the 20 main emitters, manually coded from corporate reports, SBTi, and other public sources. 3. Projects funded under Industry Leap and Climate Leap that include at least one main emitter, categorised by technological pathway and targeted emission scope. 4. Collaborations linking emitters to partners, with financial engagement classified as targeting own, others’, or negative emissions. 5. Actor categories assigning all participants to types such as emitter, university, new entrant, or intermediary. 6. Appendix data with the full list of projects involving main emitters.
+
+All datasets are stored in the data_prepared/ folder and read into R for cleaning and analysis.
 
 ```{r}
 
@@ -109,14 +115,15 @@ a1_data <- read_csv("data_prepared/A1_main_emitter_projects.csv")
 
 # Identify main emitters from emission statistics and their engagement from collaboration data
 
-In the next code chunk we first identify the 20 main emitters in Sweden by aggregating official emission statistics from Naturvårdsverket (2022). We then calculate their level of engagement in Industry and Climate Leap projects by aggregating collaboration data on public funding received. Finally, we merge the emissions and engagement data to establish the dataset used in Analysis A.
+We begin by selecting Sweden’s 20 largest industrial emitters, based on aggregated 2022 emissions reported by Naturvårdsverket (Swedish EPA). To assess how these firms engage with decarbonisation programmes, we combine the emission data with collaboration records from Industry Leap and Climate Leap, summing all public funding linked to each firm. This allows us to calculate both absolute engagement (MSEK of support received) and funding intensity (SEK per tonne of CO₂ emitted). The merged dataset provides the foundation for Analysis A, where we examine how climate ambitions relate to actual programme participation.
 
 ```{r}
-#| label: main-emitters
+#| label: tbl-main-emitters
+#| tbl-cap: "Table 1. Sweden’s 20 largest industrial emitters (2022), their cumulative public funding engagement (MSEK), and funding intensity (SEK per ton CO₂)."
 #| echo: true
 #| message: false
 #| warning: false
-#| 
+
 # Aggregate emissions by firm and select top 20
 main_emitters_emissions <- emission_statistics %>% 
   group_by(name, industry) %>% 
@@ -223,7 +230,7 @@ amb_box_data %>%
 ```{r}
 #| echo: false
 # Save figure
-#ggsave(here::here("results/figures/2_fig_boxplot_ambition.png"), width = 8, height = 8, units = "in", dpi = 300)
+#ggsave(here::here("results/figures/Figure_2.png"), width = 8, height = 8, units = "in", dpi = 1200)
 ```
 
 ## Clustering of main emitters
@@ -258,11 +265,13 @@ fviz_nbclust(cluster_input, kmeans, method = "wss")
 set.seed(42)
 kmeans_result <- kmeans(cluster_input, centers = 3)
 
+
 # Add cluster assignments to dataset
 ambitions$cluster <- as.factor(kmeans_result$cluster)
 ```
 
 ### Plotting the Clusters (Figure 3 in paper)
+
 ```{r}
 #| label: fig-clusters
 #| echo: true
@@ -295,7 +304,7 @@ amb_plot_data %>%
 
 ```{r}
 #| echo: false
-#ggsave(here::here("results/figures/3_emissions_ambition_cluster.png"), width = 8, height = 8, units = "in", dpi = 300)
+#ggsave(here::here("results/figures/Figure_3.png"), width = 8, height = 8, units = "in", dpi = 1200)
 ```
 
 # Analysis B: Solution pathways and emissions scopes of investments
@@ -335,6 +344,7 @@ str(sp_wide)
 ```
 
 ## Emitter–pathway network (Figure 4 in paper)
+
 ```{r}
 #| label: fig-scope-pathway-network
 #| echo: true
@@ -404,10 +414,11 @@ theme(legend.position = 'bottom',
 
 ```{r}
 #| echo: FALSE
-#ggsave(here::here("results/figures/4_scope_pathway.png"), width = 12, height = 8, dpi = 600)
+#ggsave(here::here("results/figures/Figure_4.png"), width = 12, height = 8, dpi = 1200)
 ```
 
 # Analysis C: Collaborations and Engagement
+
 In the final step, we examine how main emitters are embedded in the wider network of actors participating in publicly funded decarbonisation projects. We construct a one-mode actor network in which nodes represent organisations (emitters and their collaborators), and edges capture co-participation in projects. This enables us to assess both the breadth of collaborative ties and the centrality of emitters in the network.
 
 The first figure visualises the resulting actor network. Main emitters are highlighted and labelled, while other actors are coloured by type (e.g., industrial firms, universities, partnerships, intermediaries). Node size indicates degree centrality, and edge thickness reflects the number of shared projects. The network shows that while some emitters are highly central and well-connected, others remain more peripheral.
@@ -417,6 +428,7 @@ We then calculate a set of network statistics (e.g., density, clustering, averag
 Finally, we cluster main emitters based on their collaborative embeddedness (degree centrality) and their level of public funding engagement (MSEK). The resulting groups (C1–C7), shown in the second figure, highlight distinct participation profiles ranging from “high collaboration and very high engagement” to “low collaboration and very low engagement.” These clusters illustrate how firms differ not only in the amount of funding they capture, but also in how embedded they are within collaborative structures.
 
 ## One mode network (Figure 5 in paper)
+
 ```{r}
 #| label: c-actor-network
 #| echo: true
@@ -492,7 +504,7 @@ ggraph(gs, layout = "fr") +
 
 ```{r}
 #| echo: FALSE
-#ggsave(here::here("results/figures/5_emitters_network.png"), width = 12, height = 8, dpi = 600)
+#ggsave(here::here("results/figures/Figure_5.png"), width = 12, height = 8, dpi = 1200)
 ```
 
 ## Calculate Network Characteristics
@@ -621,6 +633,7 @@ results_tbl
 ## Clustering of main emitters based on their level of engagement and collaborations (degree)
 
 ### Identifying appropriate number of clusters
+
 ```{r}
 #| label: c-kmeans-selection
 #| echo: true
@@ -657,6 +670,77 @@ emitter_nodes <- mm_nodes %>%
 ```
 
 ## Plotting the Clusters (Figure 6 in paper)
+
+C1: Moderately Central, Highly Engaged Collaborators
+
+(Medium collaboration, high engagement)
+
+```         
+•   Uniper, Boliden, Stockholm Exergi, St1
+
+•   Degree: 8–11 \| Engagement: high
+```
+
+C2: Highly Central, Low-Engagement Collaborators
+
+(High collaboration, low engagement)
+
+```         
+•   Preem, Vargön Alloys, Sysav, E.ON
+
+•   Degree: 8–16 \| Engagement: low
+```
+
+C3: Highly Central, Highly Engaged Anchors
+
+(High collaboration, very high engagement)
+
+```         
+•   Heidelberg Materials, Vattenfall, LKAB
+
+•   Degree: 14–21 \| Engagement: very high
+```
+
+C4: Extremely Central, Low-Engagement Actor
+
+(Very high collaboration, low engagement)
+
+```         
+•   Höganäs
+
+•   Degree: 30 \| Engagement: low
+```
+
+C5: Low-Centrality, Selectively Engaged Actors
+
+(Low collaboration, moderate-to-high engagement)
+
+```         
+•   Kubal, Tekniska verken i Linköping, Borealis
+
+•   Degree: 0–2 \| Engagement: selective
+```
+
+C6: Peripheral, Minimally Engaged Actors
+
+(Low collaboration, very low engagement)
+
+```         
+•   Renova, SMA Mineral
+
+•   Degree: 5–9 \| Engagement: minimal
+```
+
+C7: Moderately Central, Moderately Engaged Actors
+
+(Intermediate collaboration and engagement)
+
+```         
+•   Outokumpu, Nordkalk, SSAB
+
+•   Degree: 10–19 \| Engagement: moderate
+```
+
 ```{r}
 #| label: fig-embed-clusters
 #| echo: true
@@ -685,12 +769,145 @@ emitter_nodes %>%
 
 ```{r}
 #| echo: FALSE
-#ggsave(here::here("results/figures/6_degree_vs_engagement.png"), width = 8, height = 8, dpi = 300)  
+#ggsave(here::here("results/figures/Figure_6.png"), width = 8, height = 8, dpi = 1200)  
 ```
 
+# Construction of the Role Typology from Cluster Analyses A–C
+
+The role typology is constructed by combining results from three analytically distinct clustering steps (A–C) and translating their joint patterns into four higher-level strategic roles. This section explains how the two tables produced by the code above are used together for this purpose: (i) tab_ABC, which documents each incumbent’s cluster memberships and descriptive labels across A–C, and (ii) the typology table (discussion_typology.xlsx), which maps incumbents to the final four roles used in the main text. Read together, these tables make transparent the inferential chain from empirical clustering results to the interpretive role typology.
+
+## Generating the cross-analysis table (tab_ABC)
+
+```{r}
+
+cl_a <- tribble(~cluster_nr, ~cluster_name,
+                 "1", "A1: Lower Emissions and Lower Engagement",
+                 "2", "A2: Relatively Low Emissions and High Engagement",
+                 "3", "A3: High Emissions, Varied Engagement")
+cl_b <- tribble(~cluster_nr, ~cluster_name, 
+                "1", "B1: Exploring Biofuels and Biomass for addressing Scope 1&2 emissions",
+                "2",  "B2: Scaling electrification and hydrogen to address Scope 1 and 2 emissions while also reducing emissions from others.", 
+                "3", "B3: Towards implementing CCS for reducing Scope 1 emissions",
+                "4", "B4: Creating infrastructure to address others’ emissions",
+                "5", "B5: Bioenergy, BECCS, and Recycling for Emission Reductions",
+                "6", "B6: Strategic Engagement in Waste-to-Energy CCS and Bio-based Solutions",
+                "7", "B7: Strategic Recycling to Address Direct Emissions")
+cl_c <- tribble(~cluster_nr, ~cluster_name, 
+                "1", "C1: Moderately Central, Highly Engaged Actors",
+                "2", "C2: Highly Central, Low-Engagement Actors", 
+                "3", "C3: Highly Central, Highly Engaged Actors",
+                "4", "C4: Extremely Central, Low-Engagement Actors",
+                "5", "C5: Low-Centrality, Selectively Engaged Actors",
+                "6", "C6: Peripheral, Minimally Engaged Actors",
+                "7", "C7: Moderately Central, Moderately Engaged Actors")
+
+a <- amb_plot_data %>% 
+  select(name, cluster_nr = cluster) %>% left_join(cl_a) %>%
+  select(-cluster_nr) %>%
+  separate(cluster_name, c("cl_A", "name_A"), sep = ": ")
+b <- sp_nodes %>% filter(name %in% main_emitters$name) %>%
+  mutate(cl = as.character(cl)) %>% 
+  select(name, cluster_nr = cl) %>% left_join(cl_b) %>%
+  select(-cluster_nr) %>%
+  separate(cluster_name, c("cl_B", "name_B"), sep = ": ")
+c <- emitter_nodes %>% 
+  mutate(cluster = as.character(cluster)) %>% 
+  select(name, cluster_nr = cluster) %>% left_join(cl_c) %>%
+  select(-cluster_nr) %>%
+  separate(cluster_name, c("cl_C", "name_C"), sep = ": ")
+
+tab_ABC <- a %>% left_join(b) %>% left_join(c) %>%
+  mutate(Clusters = paste0(cl_A,"-", cl_B,"-", cl_C),
+         Descriptions = paste0(name_A, "; ", name_B, "; ", name_C)) %>%
+  select(Incumbent = name, Clusters, Descriptions)
+
+tab_ABC %>% gt()
+write_excel_csv(tab_ABC, "results/tables/tab_ABC.csv")
+```
+
+## From A–B–C configurations to roles: the logic of the typology table
+
+The second table (typology, loaded from discussion_typology.xlsx) records the final role assignment for each incumbent. The role typology is not produced via an additional clustering step or a formal algorithmic rule. Rather, the typology table is constructed through a comparative, configuration-based synthesis where the A–B–C configuration patterns observed in tab_ABC are grouped into four higher-level roles.
+
+```{r}
+typology <- readxl::read_xlsx("data_prepared/discussion_typology.xlsx")
+
+typology %>% gt()
+
+```
+
+In this synthesis, the three analyses are treated as complementary lenses that jointly characterise incumbent role performance within the transformative policy mission. Analysis A (emissions–engagement proportionality) captures whether incumbents’ engagement in mission-oriented policy instruments is commensurate with their material responsibility for emissions. Analysis B (pathway–scope orientation) captures how firms translate mission directionality into strategic choices regarding technological pathways and the emissions scope they target. Analysis C (collaboration–engagement positioning) captures how firms position themselves within collaborative project structures, combining network embeddedness with engagement intensity.
+
+Rather than deriving roles mechanically from specific cluster combinations, roles are assigned by identifying dominant and recurring orientations across these three domains. Explanatory power in this approach derives from the consistency—or systematic tension—between a firm’s positions across A–C, rather than from any single cluster membership.
+
+In practical terms, the role typology can be understood as a configuration-based mapping that takes the empirical information contained in firms’ A–B–C profiles as input and produces higher-level role categories as interpretive summaries of similar strategic orientations. The appendix therefore replaces a purely tabular presentation with firm-level role motivations, making explicit how each assignment follows from the observed A–B–C configuration in relation to the guiding questions of responsibility and commitment (A), strategic orientation (B), and system positioning (C).
+
+### Transformative frontrunners
+
+Transformative frontrunners are incumbents whose configurations indicate strong engagement relative to their emissions responsibility, prioritisation of pathways that directly target core process emissions, and collaborative positions that support coordination and scaling. These firms do not share identical A–B–C combinations but converge on a common strategic orientation toward system-level transformation.
+
+	•	SSAB combines very high emissions responsibility with substantial engagement and a clear focus on hydrogen-based steelmaking through the HYBRIT initiative. Its pathway orientation targets core Scope 1 emissions, while its semi-central collaborative position reflects its role as an anchor firm in coordination-intensive projects rather than a broad network broker.
+
+	•	LKAB exhibits high engagement relative to its emissions responsibility and consistently prioritises electrification and hydrogen-based production to transform iron ore pelletisation. Its central collaborative positioning and extensive project portfolio position it as a coordinating actor linking upstream mining with downstream steel transformation.
+
+	•	Boliden combines moderate emissions with high engagement and a strong focus on electrification, hydrogen, and energy efficiency in mining and smelting processes. Its central network position reflects sustained collaboration across projects that generate both direct emission reductions and system-level spillovers.
+
+	•	Heidelberg Materials pairs very high emissions with substantial engagement oriented toward large-scale CCS deployment at its cement plant. Its pathway choice directly addresses process emissions that cannot be eliminated through fuel switching, while its central collaborative position reflects the infrastructure- and coordination-intensive nature of CCS.
+
+	•	Stockholm Exergi combines relatively low emissions with high engagement and a strategic focus on BECCS. Its role is transformative not through industrial process change, but through anchoring negative-emissions infrastructure that is central to the mission’s long-term system balance.
+
+Together, these firms enact transformation either by reconfiguring core production processes or by anchoring infrastructures that are indispensable for deep decarbonisation at system level.
+
+
+### System enablers
+
+System enablers are incumbents whose primary contribution lies in enabling other actors’ decarbonisation through shared infrastructures, rather than transforming their own core production processes. They combine high engagement with infrastructure-oriented pathways and central coordinating positions.
+
+	•	Vattenfall occupies a central coordinating role in hydrogen and CCS infrastructures, notably through HYBRIT and related storage and transport initiatives. While its own direct emissions are not the main focus of these projects, its activities enable transformation across steel, mining, and industrial value chains.
+
+	•	Uniper similarly combines substantial engagement with infrastructure-oriented pathways, contributing to CCS networks and hydrogen-integrated CCU projects. Its role is characterised by brokerage and coordination rather than direct core-process transformation.
+
+These firms act as system builders whose strategic relevance lies in structuring interdependencies, reducing coordination failures, and enabling scaling across sectors.
+
+### Adaptive followers
+Adaptive followers constitute the most heterogeneous role category. They engage with the mission through selective, incremental, or preparatory activities, without committing to comprehensive transformation of core production systems. Their configurations reflect partial alignment across A–C and diverse adaptive strategies.
+
+	•	Preem combines very high emissions with relatively low engagement and a CCS-oriented pathway that remains largely at the pre-study or early implementation stage. Its configuration indicates responsiveness to mission signals while postponing large-scale commitment to transforming core refining processes.
+
+	•	Höganäs exhibits low engagement relative to emissions responsibility but high collaborative embeddedness. Its biochar and biofuel pilots suggest a learning-oriented and exploratory strategy rather than capital-intensive transformation.
+
+	•	Outokumpu focuses on biofuels and energy efficiency for Scope 1 and 2 emissions, combined with moderate collaboration. Its engagement remains incremental and oriented toward substituting inputs rather than reconfiguring production.
+
+	•	Nordkalk pursues CCS pre-studies and fuel-switching initiatives, signalling awareness of mission directionality while maintaining a cautious, preparatory stance toward core process change.
+
+	•	E.ON engages in BECCS and recycling-oriented projects with relatively low engagement compared to its system relevance. Its configuration reflects selective participation that does not fully address emissions from its own core operations.
+
+	•	St1 combines relatively high engagement with biofuel infrastructure and production projects, alongside limited engagement in CCS infrastructure. Its activities support mission goals but remain focused on incremental expansion rather than structural transformation.
+
+	•	Sysav engages selectively in waste-to-energy CCS feasibility studies and recycling initiatives, reflecting an adaptive response constrained by its municipal role and operational mandate.
+
+	•	Vargön Alloys focuses on bio-based fuel substitution in ferrochrome production, complemented by isolated recycling initiatives. Its engagement remains limited in scale and collaborative scope.
+
+	•	Borealis pursues advanced plastics recycling with comparatively high funding but low collaborative embeddedness, reflecting a selective innovation strategy oriented toward specific technological niches.
+
+	•	Kubal similarly focuses on recycling and electrification within aluminium production, combining relatively high engagement with a peripheral network position.
+
+	•	Tekniska verken i Linköping exhibits high engagement but low collaborative centrality, focusing on WtE-CCS, biogas, and recycling. Its configuration reflects strong local experimentation without broader system coordination.
+
+Collectively, these firms illustrate diverse adaptive responses that may support learning and incremental alignment with the mission, while also allowing core decarbonisation challenges to remain partially unresolved.
+
+
+### Peripheral bystanders
+Peripheral bystanders remain marginal across all three analytical domains. Their configurations show low engagement relative to emissions responsibility, peripheral collaborative positioning, and limited or preparatory pathway orientations.
+
+	•	SMA Mineral exhibits minimal engagement, peripheral network positioning, and CCS-related activities that remain exploratory. Its configuration indicates weak integration into mission-oriented coordination and scaling dynamics.
+
+	•	Renova similarly combines low engagement with peripheral positioning, participating primarily in infrastructure-oriented CCS initiatives without sustained project leadership or strategic commitment.
+
+These firms represent the lower boundary of incumbent engagement within the mission context, highlighting limits to the reach of current policy instruments.
 
 # Appendix
+
 ```{r}
 a1_data %>% gt() %>% gt_theme_espn()
 ```
-

@@ -5,6 +5,7 @@ editor: visual
 ---
 
 # Libraries
+
 ```{r}
 #| message: false
 #| warning: false
@@ -13,8 +14,8 @@ library(readr)
 library(googlesheets4)
 ```
 
-
 # Reading Data
+
 ```{r}
 #| message: false
 #| warning: false
@@ -37,6 +38,7 @@ ambition_raw <- readxl::read_xlsx(here::here("data_original/emitters_ambition.xl
 ```
 
 # Data preparation for analysis
+
 ```{r}
 
 #All projects funded by EM and NV - not needed for analysis
@@ -89,10 +91,9 @@ actors <- actors_raw %>%
 write_csv(actors, here::here("data_prepared/actors.csv"))
 
 ```
- 
- 
- 
+
 # Ellmer - only used once
+
 ```{r}
 #| eval: false
 #| include: false
@@ -106,8 +107,8 @@ chat
 
 ```
 
-
 # Print Table for Appendix
+
 ```{r}
 #| eval: false
 #| include: false
@@ -147,4 +148,3 @@ proj_tbl <- proj_tbl_raw %>%
 #write_csv(proj_tbl, here::here("data_prepared/A1_main_emitter_projects.csv"))
 
 ```
-
