@@ -11,6 +11,8 @@ format:
     code-summary: "Show code"
     df-print: paged
     embed-resources: true   # 
+output-dir: docs
+output-file: index.html
 execute:
   echo: false
   warning: false
@@ -671,76 +673,6 @@ emitter_nodes <- mm_nodes %>%
 
 ## Plotting the Clusters (Figure 6 in paper)
 
-C1: Moderately Central, Highly Engaged Collaborators
-
-(Medium collaboration, high engagement)
-
-```         
-•   Uniper, Boliden, Stockholm Exergi, St1
-
-•   Degree: 8–11 \| Engagement: high
-```
-
-C2: Highly Central, Low-Engagement Collaborators
-
-(High collaboration, low engagement)
-
-```         
-•   Preem, Vargön Alloys, Sysav, E.ON
-
-•   Degree: 8–16 \| Engagement: low
-```
-
-C3: Highly Central, Highly Engaged Anchors
-
-(High collaboration, very high engagement)
-
-```         
-•   Heidelberg Materials, Vattenfall, LKAB
-
-•   Degree: 14–21 \| Engagement: very high
-```
-
-C4: Extremely Central, Low-Engagement Actor
-
-(Very high collaboration, low engagement)
-
-```         
-•   Höganäs
-
-•   Degree: 30 \| Engagement: low
-```
-
-C5: Low-Centrality, Selectively Engaged Actors
-
-(Low collaboration, moderate-to-high engagement)
-
-```         
-•   Kubal, Tekniska verken i Linköping, Borealis
-
-•   Degree: 0–2 \| Engagement: selective
-```
-
-C6: Peripheral, Minimally Engaged Actors
-
-(Low collaboration, very low engagement)
-
-```         
-•   Renova, SMA Mineral
-
-•   Degree: 5–9 \| Engagement: minimal
-```
-
-C7: Moderately Central, Moderately Engaged Actors
-
-(Intermediate collaboration and engagement)
-
-```         
-•   Outokumpu, Nordkalk, SSAB
-
-•   Degree: 10–19 \| Engagement: moderate
-```
-
 ```{r}
 #| label: fig-embed-clusters
 #| echo: true
@@ -846,63 +778,64 @@ In practical terms, the role typology can be understood as a configuration-based
 
 Transformative frontrunners are incumbents whose configurations indicate strong engagement relative to their emissions responsibility, prioritisation of pathways that directly target core process emissions, and collaborative positions that support coordination and scaling. These firms do not share identical A–B–C combinations but converge on a common strategic orientation toward system-level transformation.
 
-	•	SSAB combines very high emissions responsibility with substantial engagement and a clear focus on hydrogen-based steelmaking through the HYBRIT initiative. Its pathway orientation targets core Scope 1 emissions, while its semi-central collaborative position reflects its role as an anchor firm in coordination-intensive projects rather than a broad network broker.
+•   SSAB combines very high emissions responsibility with substantial engagement and a clear focus on hydrogen-based steelmaking through the HYBRIT initiative. Its pathway orientation targets core Scope 1 emissions, while its semi-central collaborative position reflects its role as an anchor firm in coordination-intensive projects rather than a broad network broker.
 
-	•	LKAB exhibits high engagement relative to its emissions responsibility and consistently prioritises electrification and hydrogen-based production to transform iron ore pelletisation. Its central collaborative positioning and extensive project portfolio position it as a coordinating actor linking upstream mining with downstream steel transformation.
+•   LKAB exhibits high engagement relative to its emissions responsibility and consistently prioritises electrification and hydrogen-based production to transform iron ore pelletisation. Its central collaborative positioning and extensive project portfolio position it as a coordinating actor linking upstream mining with downstream steel transformation.
 
-	•	Boliden combines moderate emissions with high engagement and a strong focus on electrification, hydrogen, and energy efficiency in mining and smelting processes. Its central network position reflects sustained collaboration across projects that generate both direct emission reductions and system-level spillovers.
+•   Boliden combines moderate emissions with high engagement and a strong focus on electrification, hydrogen, and energy efficiency in mining and smelting processes. Its central network position reflects sustained collaboration across projects that generate both direct emission reductions and system-level spillovers.
 
-	•	Heidelberg Materials pairs very high emissions with substantial engagement oriented toward large-scale CCS deployment at its cement plant. Its pathway choice directly addresses process emissions that cannot be eliminated through fuel switching, while its central collaborative position reflects the infrastructure- and coordination-intensive nature of CCS.
+•   Heidelberg Materials pairs very high emissions with substantial engagement oriented toward large-scale CCS deployment at its cement plant. Its pathway choice directly addresses process emissions that cannot be eliminated through fuel switching, while its central collaborative position reflects the infrastructure- and coordination-intensive nature of CCS.
 
-	•	Stockholm Exergi combines relatively low emissions with high engagement and a strategic focus on BECCS. Its role is transformative not through industrial process change, but through anchoring negative-emissions infrastructure that is central to the mission’s long-term system balance.
+•   Stockholm Exergi combines relatively low emissions with high engagement and a strategic focus on BECCS. Its role is transformative not through industrial process change, but through anchoring negative-emissions infrastructure that is central to the mission’s long-term system balance.
+
 
 Together, these firms enact transformation either by reconfiguring core production processes or by anchoring infrastructures that are indispensable for deep decarbonisation at system level.
-
 
 ### System enablers
 
 System enablers are incumbents whose primary contribution lies in enabling other actors’ decarbonisation through shared infrastructures, rather than transforming their own core production processes. They combine high engagement with infrastructure-oriented pathways and central coordinating positions.
 
-	•	Vattenfall occupies a central coordinating role in hydrogen and CCS infrastructures, notably through HYBRIT and related storage and transport initiatives. While its own direct emissions are not the main focus of these projects, its activities enable transformation across steel, mining, and industrial value chains.
+•   Vattenfall occupies a central coordinating role in hydrogen and CCS infrastructures, notably through HYBRIT and related storage and transport initiatives. While its own direct emissions are not the main focus of these projects, its activities enable transformation across steel, mining, and industrial value chains.
 
-	•	Uniper similarly combines substantial engagement with infrastructure-oriented pathways, contributing to CCS networks and hydrogen-integrated CCU projects. Its role is characterised by brokerage and coordination rather than direct core-process transformation.
+•   Uniper similarly combines substantial engagement with infrastructure-oriented pathways, contributing to CCS networks and hydrogen-integrated CCU projects. Its role is characterised by brokerage and coordination rather than direct core-process transformation.
 
 These firms act as system builders whose strategic relevance lies in structuring interdependencies, reducing coordination failures, and enabling scaling across sectors.
 
 ### Adaptive followers
+
 Adaptive followers constitute the most heterogeneous role category. They engage with the mission through selective, incremental, or preparatory activities, without committing to comprehensive transformation of core production systems. Their configurations reflect partial alignment across A–C and diverse adaptive strategies.
 
-	•	Preem combines very high emissions with relatively low engagement and a CCS-oriented pathway that remains largely at the pre-study or early implementation stage. Its configuration indicates responsiveness to mission signals while postponing large-scale commitment to transforming core refining processes.
+•   Preem combines very high emissions with relatively low engagement and a CCS-oriented pathway that remains largely at the pre-study or early implementation stage. Its configuration indicates responsiveness to mission signals while postponing large-scale commitment to transforming core refining processes.
 
-	•	Höganäs exhibits low engagement relative to emissions responsibility but high collaborative embeddedness. Its biochar and biofuel pilots suggest a learning-oriented and exploratory strategy rather than capital-intensive transformation.
+•   Höganäs exhibits low engagement relative to emissions responsibility but high collaborative embeddedness. Its biochar and biofuel pilots suggest a learning-oriented and exploratory strategy rather than capital-intensive transformation.
 
-	•	Outokumpu focuses on biofuels and energy efficiency for Scope 1 and 2 emissions, combined with moderate collaboration. Its engagement remains incremental and oriented toward substituting inputs rather than reconfiguring production.
+•   Outokumpu focuses on biofuels and energy efficiency for Scope 1 and 2 emissions, combined with moderate collaboration. Its engagement remains incremental and oriented toward substituting inputs rather than reconfiguring production.
 
-	•	Nordkalk pursues CCS pre-studies and fuel-switching initiatives, signalling awareness of mission directionality while maintaining a cautious, preparatory stance toward core process change.
+•   Nordkalk pursues CCS pre-studies and fuel-switching initiatives, signalling awareness of mission directionality while maintaining a cautious, preparatory stance toward core process change.
 
-	•	E.ON engages in BECCS and recycling-oriented projects with relatively low engagement compared to its system relevance. Its configuration reflects selective participation that does not fully address emissions from its own core operations.
+•   E.ON engages in BECCS and recycling-oriented projects with relatively low engagement compared to its system relevance. Its configuration reflects selective participation that does not fully address emissions from its own core operations.
 
-	•	St1 combines relatively high engagement with biofuel infrastructure and production projects, alongside limited engagement in CCS infrastructure. Its activities support mission goals but remain focused on incremental expansion rather than structural transformation.
+•   St1 combines relatively high engagement with biofuel infrastructure and production projects, alongside limited engagement in CCS infrastructure. Its activities support mission goals but remain focused on incremental expansion rather than structural transformation.
 
-	•	Sysav engages selectively in waste-to-energy CCS feasibility studies and recycling initiatives, reflecting an adaptive response constrained by its municipal role and operational mandate.
+•   Sysav engages selectively in waste-to-energy CCS feasibility studies and recycling initiatives, reflecting an adaptive response constrained by its municipal role and operational mandate.
 
-	•	Vargön Alloys focuses on bio-based fuel substitution in ferrochrome production, complemented by isolated recycling initiatives. Its engagement remains limited in scale and collaborative scope.
+•   Vargön Alloys focuses on bio-based fuel substitution in ferrochrome production, complemented by isolated recycling initiatives. Its engagement remains limited in scale and collaborative scope.
 
-	•	Borealis pursues advanced plastics recycling with comparatively high funding but low collaborative embeddedness, reflecting a selective innovation strategy oriented toward specific technological niches.
+•   Borealis pursues advanced plastics recycling with comparatively high funding but low collaborative embeddedness, reflecting a selective innovation strategy oriented toward specific technological niches.
 
-	•	Kubal similarly focuses on recycling and electrification within aluminium production, combining relatively high engagement with a peripheral network position.
+•   Kubal similarly focuses on recycling and electrification within aluminium production, combining relatively high engagement with a peripheral network position.
 
-	•	Tekniska verken i Linköping exhibits high engagement but low collaborative centrality, focusing on WtE-CCS, biogas, and recycling. Its configuration reflects strong local experimentation without broader system coordination.
+•   Tekniska verken i Linköping exhibits high engagement but low collaborative centrality, focusing on WtE-CCS, biogas, and recycling. Its configuration reflects strong local experimentation without broader system coordination.
 
 Collectively, these firms illustrate diverse adaptive responses that may support learning and incremental alignment with the mission, while also allowing core decarbonisation challenges to remain partially unresolved.
 
-
 ### Peripheral bystanders
+
 Peripheral bystanders remain marginal across all three analytical domains. Their configurations show low engagement relative to emissions responsibility, peripheral collaborative positioning, and limited or preparatory pathway orientations.
 
-	•	SMA Mineral exhibits minimal engagement, peripheral network positioning, and CCS-related activities that remain exploratory. Its configuration indicates weak integration into mission-oriented coordination and scaling dynamics.
+•   SMA Mineral exhibits minimal engagement, peripheral network positioning, and CCS-related activities that remain exploratory. Its configuration indicates weak integration into mission-oriented coordination and scaling dynamics.
 
-	•	Renova similarly combines low engagement with peripheral positioning, participating primarily in infrastructure-oriented CCS initiatives without sustained project leadership or strategic commitment.
+•   Renova similarly combines low engagement with peripheral positioning, participating primarily in infrastructure-oriented CCS initiatives without sustained project leadership or strategic commitment.
 
 These firms represent the lower boundary of incumbent engagement within the mission context, highlighting limits to the reach of current policy instruments.
 
