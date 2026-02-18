@@ -30,13 +30,29 @@ editor_options:
 
 This document provides a reproducible analysis of how Sweden’s 20 largest industrial emitters engage with the mission to reach net-zero emissions by 2045. We integrate official emissions statistics, project-level funding data from Industry Leap and Climate Leap, and collaboration patterns derived from social network analysis to evaluate each firm’s ambition, technological pathway, targeted emission scope, engagement (public funding captured), and collaborations.
 
-Two headline results emerge. First, stated ambition levels are a poor proxy for action: several firms with high-profile net-zero targets show limited programme participation, while a subset of medium-ambition incumbents are central, well-funded participants. Second, incumbents do not behave as simple “leaders” or “laggards.” Instead, we identify four strategic roles—transformative frontrunners, system enablers, adaptive followers, and peripheral bystanders—that better capture how incumbents mobilise resources and shape system change.
+Two main results emerge. First, stated ambition levels are a poor proxy for action: several firms with high-profile net-zero targets show limited programme participation, while a subset of medium-ambition incumbents are central, well-funded participants. Second, incumbents do not behave as simple “leaders” or “laggards.” Instead, we identify four strategic roles—transformative frontrunners, system enablers, adaptive followers, and peripheral bystanders—that better capture how incumbents mobilise resources and shape system change.
 
-By making the data, code, and figures transparent, the analysis aims to move policy and research debates beyond ambition statements toward observable engagement and collaboration, helping to design instruments that (i) reward concrete participation aligned with mission goals, (ii) foster shared infrastructures, and (iii) tailor support and pressure to heterogeneous incumbent roles.
+The reference to the full paper is:
+
+-   Hellsmark, H., Andersson, J., Hedeler, B., 2026. Beyond leaders and laggards: How incumbents navigate transformative policy missions. Energy Policy 212, 115147. <https://doi.org/10.1016/j.enpol.2026.115147>
+
+Please cite the paper and/or the zenodo archive if you use the data: <https://doi.org/10.5281/zenodo.18186739>
 
 **Structure of the analysis**
 
-This document is organised into six steps: 1. Data import — emissions, climate ambitions, project participation, collaborations, and actor categories. 2. Data preparation — cleaning and harmonising datasets for consistent identifiers and categories. 3. Analysis A: Ambition vs. Engagement — linking firms’ stated ambitions to emissions and public funding, and clustering participation profiles. 4. Analysis B: Pathways × Scopes — mapping technological solution pathways against targeted emission scopes and identifying investment communities. 5. Analysis C: Collaboration networks — constructing and analysing actor networks to assess the centrality and roles of main emitters. 6. Outputs — figures, tables, and metrics that reproduce results presented in the associated manuscript and appendix.
+This document is organised into six steps:
+
+1.  Data import — emissions, climate ambitions, project participation, collaborations, and actor categories.
+
+2.  Data preparation — cleaning and harmonising datasets for consistent identifiers and categories.
+
+3.  Analysis A: Ambition vs. Engagement — linking firms’ stated ambitions to emissions and public funding, and clustering participation profiles.
+
+4.  Analysis B: Pathways × Scopes — mapping technological solution pathways against targeted emission scopes and identifying investment communities.
+
+5.  Analysis C: Collaboration networks — constructing and analysing actor networks to assess the centrality and roles of main emitters.
+
+6.  Outputs — figures, tables, and metrics that reproduce results presented in the associated manuscript and appendix.
 
 ```{r}
 #| eval: false
@@ -82,12 +98,21 @@ suppressPackageStartupMessages({
 
 # Data sources
 
-The analysis draws on six prepared datasets: 1. Emission statistics (2022) from Naturvårdsverket (Swedish EPA). 2. Climate ambitions of the 20 main emitters, manually coded from corporate reports, SBTi, and other public sources. 3. Projects funded under Industry Leap and Climate Leap that include at least one main emitter, categorised by technological pathway and targeted emission scope. 4. Collaborations linking emitters to partners, with financial engagement classified as targeting own, others’, or negative emissions. 5. Actor categories assigning all participants to types such as emitter, university, new entrant, or intermediary. 6. Appendix data with the full list of projects involving main emitters.
+The analysis draws on six prepared datasets:
 
-All datasets are stored in the data_prepared/ folder and read into R for cleaning and analysis.
+1.  Emission statistics (2022) from Naturvårdsverket (Swedish EPA).
+2.  Climate ambitions of the 20 main emitters, manually coded from corporate reports, SBTi, and other public sources.
+3.  Projects funded under Industry Leap and Climate Leap that include at least one main emitter, categorised by technological pathway and targeted emission scope.
+4.  Collaborations linking emitters to partners, with financial engagement classified as targeting own, others’, or negative emissions.
+5.  Actor categories assigning all participants to types such as emitter, university, new entrant, or intermediary.
+6.  Appendix data with the full list of projects involving main emitters.
+
+All datasets are stored in the `data_prepared/folder` and read into R for cleaning and analysis.
 
 ```{r}
-
+#| echo: true
+#| message: false
+#| warning: false
 # 1. Official emission statistics (2022) from Naturvårdsverket (NV).
 
 emission_statistics <- read_csv("data_prepared/emission_statistics.csv")
@@ -778,16 +803,15 @@ In practical terms, the role typology can be understood as a configuration-based
 
 Transformative frontrunners are incumbents whose configurations indicate strong engagement relative to their emissions responsibility, prioritisation of pathways that directly target core process emissions, and collaborative positions that support coordination and scaling. These firms do not share identical A–B–C combinations but converge on a common strategic orientation toward system-level transformation.
 
-•   SSAB combines very high emissions responsibility with substantial engagement and a clear focus on hydrogen-based steelmaking through the HYBRIT initiative. Its pathway orientation targets core Scope 1 emissions, while its semi-central collaborative position reflects its role as an anchor firm in coordination-intensive projects rather than a broad network broker.
+• SSAB combines very high emissions responsibility with substantial engagement and a clear focus on hydrogen-based steelmaking through the HYBRIT initiative. Its pathway orientation targets core Scope 1 emissions, while its semi-central collaborative position reflects its role as an anchor firm in coordination-intensive projects rather than a broad network broker.
 
-•   LKAB exhibits high engagement relative to its emissions responsibility and consistently prioritises electrification and hydrogen-based production to transform iron ore pelletisation. Its central collaborative positioning and extensive project portfolio position it as a coordinating actor linking upstream mining with downstream steel transformation.
+• LKAB exhibits high engagement relative to its emissions responsibility and consistently prioritises electrification and hydrogen-based production to transform iron ore pelletisation. Its central collaborative positioning and extensive project portfolio position it as a coordinating actor linking upstream mining with downstream steel transformation.
 
-•   Boliden combines moderate emissions with high engagement and a strong focus on electrification, hydrogen, and energy efficiency in mining and smelting processes. Its central network position reflects sustained collaboration across projects that generate both direct emission reductions and system-level spillovers.
+• Boliden combines moderate emissions with high engagement and a strong focus on electrification, hydrogen, and energy efficiency in mining and smelting processes. Its central network position reflects sustained collaboration across projects that generate both direct emission reductions and system-level spillovers.
 
-•   Heidelberg Materials pairs very high emissions with substantial engagement oriented toward large-scale CCS deployment at its cement plant. Its pathway choice directly addresses process emissions that cannot be eliminated through fuel switching, while its central collaborative position reflects the infrastructure- and coordination-intensive nature of CCS.
+• Heidelberg Materials pairs very high emissions with substantial engagement oriented toward large-scale CCS deployment at its cement plant. Its pathway choice directly addresses process emissions that cannot be eliminated through fuel switching, while its central collaborative position reflects the infrastructure- and coordination-intensive nature of CCS.
 
-•   Stockholm Exergi combines relatively low emissions with high engagement and a strategic focus on BECCS. Its role is transformative not through industrial process change, but through anchoring negative-emissions infrastructure that is central to the mission’s long-term system balance.
-
+• Stockholm Exergi combines relatively low emissions with high engagement and a strategic focus on BECCS. Its role is transformative not through industrial process change, but through anchoring negative-emissions infrastructure that is central to the mission’s long-term system balance.
 
 Together, these firms enact transformation either by reconfiguring core production processes or by anchoring infrastructures that are indispensable for deep decarbonisation at system level.
 
@@ -795,9 +819,9 @@ Together, these firms enact transformation either by reconfiguring core producti
 
 System enablers are incumbents whose primary contribution lies in enabling other actors’ decarbonisation through shared infrastructures, rather than transforming their own core production processes. They combine high engagement with infrastructure-oriented pathways and central coordinating positions.
 
-•   Vattenfall occupies a central coordinating role in hydrogen and CCS infrastructures, notably through HYBRIT and related storage and transport initiatives. While its own direct emissions are not the main focus of these projects, its activities enable transformation across steel, mining, and industrial value chains.
+• Vattenfall occupies a central coordinating role in hydrogen and CCS infrastructures, notably through HYBRIT and related storage and transport initiatives. While its own direct emissions are not the main focus of these projects, its activities enable transformation across steel, mining, and industrial value chains.
 
-•   Uniper similarly combines substantial engagement with infrastructure-oriented pathways, contributing to CCS networks and hydrogen-integrated CCU projects. Its role is characterised by brokerage and coordination rather than direct core-process transformation.
+• Uniper similarly combines substantial engagement with infrastructure-oriented pathways, contributing to CCS networks and hydrogen-integrated CCU projects. Its role is characterised by brokerage and coordination rather than direct core-process transformation.
 
 These firms act as system builders whose strategic relevance lies in structuring interdependencies, reducing coordination failures, and enabling scaling across sectors.
 
@@ -805,27 +829,27 @@ These firms act as system builders whose strategic relevance lies in structuring
 
 Adaptive followers constitute the most heterogeneous role category. They engage with the mission through selective, incremental, or preparatory activities, without committing to comprehensive transformation of core production systems. Their configurations reflect partial alignment across A–C and diverse adaptive strategies.
 
-•   Preem combines very high emissions with relatively low engagement and a CCS-oriented pathway that remains largely at the pre-study or early implementation stage. Its configuration indicates responsiveness to mission signals while postponing large-scale commitment to transforming core refining processes.
+• Preem combines very high emissions with relatively low engagement and a CCS-oriented pathway that remains largely at the pre-study or early implementation stage. Its configuration indicates responsiveness to mission signals while postponing large-scale commitment to transforming core refining processes.
 
-•   Höganäs exhibits low engagement relative to emissions responsibility but high collaborative embeddedness. Its biochar and biofuel pilots suggest a learning-oriented and exploratory strategy rather than capital-intensive transformation.
+• Höganäs exhibits low engagement relative to emissions responsibility but high collaborative embeddedness. Its biochar and biofuel pilots suggest a learning-oriented and exploratory strategy rather than capital-intensive transformation.
 
-•   Outokumpu focuses on biofuels and energy efficiency for Scope 1 and 2 emissions, combined with moderate collaboration. Its engagement remains incremental and oriented toward substituting inputs rather than reconfiguring production.
+• Outokumpu focuses on biofuels and energy efficiency for Scope 1 and 2 emissions, combined with moderate collaboration. Its engagement remains incremental and oriented toward substituting inputs rather than reconfiguring production.
 
-•   Nordkalk pursues CCS pre-studies and fuel-switching initiatives, signalling awareness of mission directionality while maintaining a cautious, preparatory stance toward core process change.
+• Nordkalk pursues CCS pre-studies and fuel-switching initiatives, signalling awareness of mission directionality while maintaining a cautious, preparatory stance toward core process change.
 
-•   E.ON engages in BECCS and recycling-oriented projects with relatively low engagement compared to its system relevance. Its configuration reflects selective participation that does not fully address emissions from its own core operations.
+• E.ON engages in BECCS and recycling-oriented projects with relatively low engagement compared to its system relevance. Its configuration reflects selective participation that does not fully address emissions from its own core operations.
 
-•   St1 combines relatively high engagement with biofuel infrastructure and production projects, alongside limited engagement in CCS infrastructure. Its activities support mission goals but remain focused on incremental expansion rather than structural transformation.
+• St1 combines relatively high engagement with biofuel infrastructure and production projects, alongside limited engagement in CCS infrastructure. Its activities support mission goals but remain focused on incremental expansion rather than structural transformation.
 
-•   Sysav engages selectively in waste-to-energy CCS feasibility studies and recycling initiatives, reflecting an adaptive response constrained by its municipal role and operational mandate.
+• Sysav engages selectively in waste-to-energy CCS feasibility studies and recycling initiatives, reflecting an adaptive response constrained by its municipal role and operational mandate.
 
-•   Vargön Alloys focuses on bio-based fuel substitution in ferrochrome production, complemented by isolated recycling initiatives. Its engagement remains limited in scale and collaborative scope.
+• Vargön Alloys focuses on bio-based fuel substitution in ferrochrome production, complemented by isolated recycling initiatives. Its engagement remains limited in scale and collaborative scope.
 
-•   Borealis pursues advanced plastics recycling with comparatively high funding but low collaborative embeddedness, reflecting a selective innovation strategy oriented toward specific technological niches.
+• Borealis pursues advanced plastics recycling with comparatively high funding but low collaborative embeddedness, reflecting a selective innovation strategy oriented toward specific technological niches.
 
-•   Kubal similarly focuses on recycling and electrification within aluminium production, combining relatively high engagement with a peripheral network position.
+• Kubal similarly focuses on recycling and electrification within aluminium production, combining relatively high engagement with a peripheral network position.
 
-•   Tekniska verken i Linköping exhibits high engagement but low collaborative centrality, focusing on WtE-CCS, biogas, and recycling. Its configuration reflects strong local experimentation without broader system coordination.
+• Tekniska verken i Linköping exhibits high engagement but low collaborative centrality, focusing on WtE-CCS, biogas, and recycling. Its configuration reflects strong local experimentation without broader system coordination.
 
 Collectively, these firms illustrate diverse adaptive responses that may support learning and incremental alignment with the mission, while also allowing core decarbonisation challenges to remain partially unresolved.
 
@@ -833,9 +857,9 @@ Collectively, these firms illustrate diverse adaptive responses that may support
 
 Peripheral bystanders remain marginal across all three analytical domains. Their configurations show low engagement relative to emissions responsibility, peripheral collaborative positioning, and limited or preparatory pathway orientations.
 
-•   SMA Mineral exhibits minimal engagement, peripheral network positioning, and CCS-related activities that remain exploratory. Its configuration indicates weak integration into mission-oriented coordination and scaling dynamics.
+• SMA Mineral exhibits minimal engagement, peripheral network positioning, and CCS-related activities that remain exploratory. Its configuration indicates weak integration into mission-oriented coordination and scaling dynamics.
 
-•   Renova similarly combines low engagement with peripheral positioning, participating primarily in infrastructure-oriented CCS initiatives without sustained project leadership or strategic commitment.
+• Renova similarly combines low engagement with peripheral positioning, participating primarily in infrastructure-oriented CCS initiatives without sustained project leadership or strategic commitment.
 
 These firms represent the lower boundary of incumbent engagement within the mission context, highlighting limits to the reach of current policy instruments.
 
